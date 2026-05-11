@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>採購情報中心</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e2a;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e8eaf0;--text2:#8892a4;--text3:#4a5568;
+  --accent:#4f9cf9;--accent2:#38bdf8;
+  --up:#f87171;--dn:#4ade80;--warn:#fb923c;--gold:#fbbf24;
+  --r:12px;--rs:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;min-height:100vh;overscroll-behavior:none}
+.mono{font-family:'DM Mono',monospace}
+
+/* Header */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(13,15,20,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:13px 16px 11px;display:flex;align-items:center;justify-content:space-between}
+.hdr-l{display:flex;align-items:center;gap:10px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
+.hdr-title{font-size:15px;font-weight:500}
+.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.refresh-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all .2s;display:flex;align-items:center;gap:5px}
+.refresh-btn:active{transform:scale(.96)}
+.spin{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Nav */
+.nav{display:flex;border-bottom:1px solid var(--border);background:var(--bg2);overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{flex:1;min-width:80px;padding:11px 8px;font-size:12px;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* Page */
+.page{display:none;padding:16px}
+.page.active{display:block}
+
+/* Loading */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px}
+.spinner{width:28px;height:28px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+.loading-txt{font-size:13px;color:var(--text2)}
+
+/* KPI Cards */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 12px;position:relative;overflow:hidden}
+.kcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ca,var(--accent));opacity:.7}
+.klabel{font-size:10px;color:var(--text3);letter-spacing:.06em;margin-bottom:6px}
+.kval{font-size:22px;font-weight:500;font-family:'DM Mono',monospace;line-height:1}
+.kchg{font-size:11px;margin-top:5px;font-family:'DM Mono',monospace}
+.ksub{font-size:10px;color:var(--text3);margin-top:3px}
+
+/* Badges */
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;font-family:'DM Mono',monospace;font-weight:500}
+.b-up{background:rgba(248,113,113,.12);color:var(--up)}
+.b-dn{background:rgba(74,222,128,.12);color:var(--dn)}
+.b-neu{background:var(--bg3);color:var(--text3)}
+.b-hot{background:rgba(248,113,113,.2);color:var(--up);font-weight:700}
+.b-warn{background:rgba(251,146,60,.15);color:var(--warn)}
+
+/* Alert */
+.alert{background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);border-left:3px solid var(--warn);border-radius:var(--rs);padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--text2);line-height:1.6}
+.alert b{color:var(--warn)}
+
+/* Date badge */
+.date-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.date-lbl{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.05em}
+.date-val{font-size:12px;color:var(--accent2);font-family:'DM Mono',monospace}
+
+/* Section */
+.sec{margin-bottom:14px}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;cursor:pointer;user-select:none}
+.sec-title{font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+.sec-tog{font-size:11px;color:var(--text3)}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse}
+.tbl tr{border-bottom:1px solid var(--border)}
+.tbl tr:last-child{border-bottom:none}
+.tbl td{padding:9px 4px;font-size:12px;vertical-align:middle}
+.tbl td:first-child{color:var(--text2);width:42%}
+.tbl td:nth-child(2){font-family:'DM Mono',monospace;text-align:right;font-size:13px}
+.tbl td:last-child{text-align:right;width:28%}
+
+/* Chart */
+.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px}
+.chart-title{font-size:11px;color:var(--text3);letter-spacing:.08em;margin-bottom:12px}
+.chart-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.ctab{font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:none;color:var(--text2);cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all .2s}
+.ctab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.chart-wrap{position:relative;height:180px}
+
+/* ── RFP 頁面 ── */
+/* 匯整表 */
+.summary-title{font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin-bottom:10px}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.scard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:12px 12px;position:relative;overflow:hidden}
+.scard.highlight{border-color:rgba(79,156,249,.3)}
+.scard::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--sca,var(--bg3));border-radius:2px 0 0 2px}
+.scard-name{font-size:13px;font-weight:500;margin-bottom:8px}
+.scard-stats{display:flex;gap:10px}
+.sstat{text-align:center}
+.sstat-val{font-size:18px;font-weight:500;font-family:'DM Mono',monospace}
+.sstat-lbl{font-size:9px;color:var(--text3);margin-top:1px}
+
+/* 小計列 */
+.subtotal-bar{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.sub-item{text-align:center}
+.sub-val{font-size:16px;font-weight:500;font-family:'DM Mono',monospace;color:var(--accent)}
+.sub-lbl{font-size:10px;color:var(--text3)}
+
+/* 案件列表 */
+.list-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.list-title{font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+.filter-row{display:flex;gap:8px;margin-bottom:12px}
+.search-in{flex:1;background:var(--bg2);border:1px solid var(--border2);color:var(--text);border-radius:var(--rs);padding:9px 12px;font-size:13px;font-family:'Noto Sans TC',sans-serif;outline:none}
+.search-in:focus{border-color:var(--accent)}
+.owner-sel{background:var(--bg2);border:1px solid var(--border2);color:var(--text2);border-radius:var(--rs);padding:9px 10px;font-size:12px;font-family:'Noto Sans TC',sans-serif;outline:none}
+.rfp-list{display:flex;flex-direction:column;gap:8px}
+.rfp-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:13px 14px;transition:border-color .2s}
+.rfp-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.rfp-name{font-size:13px;line-height:1.4;flex:1}
+.days-badge{font-size:11px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.d-ok{background:rgba(74,222,128,.1);color:var(--dn)}
+.d-warn{background:rgba(251,146,60,.1);color:var(--warn)}
+.d-over{background:rgba(248,113,113,.1);color:var(--up)}
+.rfp-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.meta-tag{font-size:10px;color:var(--text3)}
+.owner-tag{font-size:10px;padding:1px 8px;border-radius:20px;background:rgba(79,156,249,.1);color:var(--accent);border:1px solid rgba(79,156,249,.2)}
+/* 進度區塊 */
+.progress-box{background:var(--bg3);border-radius:var(--rs);padding:9px 10px;border-left:2px solid var(--border2)}
+.prog-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.prog-date{font-size:10px;color:var(--accent2);font-family:'DM Mono',monospace}
+.prog-target{font-size:10px;color:var(--text3)}
+.prog-text{font-size:12px;color:var(--text2);line-height:1.6;white-space:pre-wrap;word-break:break-all}
+/* 展開/收合進度 */
+.prog-toggle{font-size:11px;color:var(--text3);cursor:pointer;margin-top:4px;display:inline-block}
+.prog-full{display:none}
+
+.no-data{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
+.load-more{width:100%;margin-top:10px;padding:12px;background:var(--bg2);border:1px solid var(--border2);color:var(--text2);border-radius:var(--rs);font-size:13px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all .2s}
+.load-more:active{background:var(--bg3)}
+.err-box{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:var(--r);padding:16px;text-align:center;font-size:13px;color:var(--up);margin:20px 0}
+.footer{padding:20px 16px;text-align:center;font-size:10px;color:var(--text3)}
+
+/* 承辦人顏色 */
+.oc-0{--sca:#4f9cf9}.oc-1{--sca:#4ade80}.oc-2{--sca:#fb923c}.oc-3{--sca:#f87171}.oc-4{--sca:#a78bfa}.oc-5{--sca:#fbbf24}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-l">
+    <div class="dot"></div>
+    <div>
+      <div class="hdr-title">採購情報中心</div>
+      <div class="hdr-sub">遠東新世紀 設備採購組</div>
+    </div>
+  </div>
+  <button class="refresh-btn" onclick="refreshAll()">
+    <span id="ri">↻</span> 更新
+  </button>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="switchTab('market',this)">📈 今日行情</button>
+  <button class="nav-btn" onclick="switchTab('chart',this)">📊 趨勢圖</button>
+  <button class="nav-btn" onclick="switchTab('rfp',this)">📋 RFP 案件</button>
+</div>
+
+<!-- 今日行情 -->
+<div class="page active" id="page-market">
+  <div id="mkt-load" class="loading"><div class="spinner"></div><div class="loading-txt">載入行情資料中...</div></div>
+  <div id="mkt-body" style="display:none"></div>
+</div>
+
+<!-- 趨勢圖 -->
+<div class="page" id="page-chart">
+  <div id="ch-load" class="loading"><div class="spinner"></div><div class="loading-txt">載入趨勢資料中...</div></div>
+  <div id="ch-body" style="display:none">
+    <div class="chart-card">
+      <div class="chart-title">PRICE TREND</div>
+      <div class="chart-tabs">
+        <button class="ctab active" onclick="showTrend('fx',this)">匯率</button>
+        <button class="ctab" onclick="showTrend('metal',this)">LME</button>
+        <button class="ctab" onclick="showTrend('energy',this)">能源</button>
+        <button class="ctab" onclick="showTrend('bdi',this)">航運</button>
+        <button class="ctab" onclick="showTrend('precious',this)">貴金屬</button>
+      </div>
+      <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- RFP 案件 -->
+<div class="page" id="page-rfp">
+  <div id="rfp-load" class="loading"><div class="spinner"></div><div class="loading-txt">載入案件資料中...</div></div>
+  <div id="rfp-body" style="display:none"></div>
+</div>
+
+<div class="footer">資料來源：Supabase ｜ 遠東新世紀採購部 設備組</div>
+
+<script>
+const SURL = "https://idomnpkciupehnpthmgx.supabase.co";
+const SKEY = "sb_publishable_NLXekzegHw_-kYMTgcCnug_KiHV2Gpx"; // ← 填入完整 sb_publishable_... key
+
+let mktData=[], trendData=[], rfpData=[], summaryData=[];
+let trendChart=null, rfpFiltered=[], rfpPage=0;
+const PAGE_SIZE=15;
+
+async function sb(table,params=""){
+  const r=await fetch(`${SURL}/rest/v1/${table}${params}`,{
+    headers:{"apikey":SKEY,"Authorization":`Bearer ${SKEY}`}
+  });
+  if(!r.ok) throw new Error(`${r.status}`);
+  return r.json();
+}
+
+async function init(){ await Promise.all([loadMarket(),loadRFP()]); }
+
+// ── 行情 ──
+async function loadMarket(){
+  try{
+    const d=await sb("market_daily","?order=trade_date.desc&limit=30");
+    mktData=d; trendData=[...d].reverse();
+    renderMarket(d[0],d[1]);
+    document.getElementById("ch-load").style.display="none";
+    document.getElementById("ch-body").style.display="block";
+  }catch(e){
+    document.getElementById("mkt-load").innerHTML=`<div class="err-box">⚠ 無法載入行情<br><small>${e.message}</small></div>`;
+  }
+}
+
+function chg(c,p){if(!c||!p||p==0)return null;return((c-p)/Math.abs(p)*100);}
+function fc(c){if(c===null)return'<span class="badge b-neu">—</span>';const s=c>0?'+':'';const cl=c>0?'b-up':c<0?'b-dn':'b-neu';return`<span class="badge ${cl}">${s}${c.toFixed(2)}%</span>`;}
+function fh(c){if(c===null)return'<span class="badge b-neu">—</span>';const hot=Math.abs(c)>=3;const s=c>0?'+':'';const cl=hot?'b-hot':c>0?'b-up':c<0?'b-dn':'b-neu';const f=hot?(c>0?' 🔺':' 🔻'):'';return`<span class="badge ${cl}">${s}${c.toFixed(2)}%${f}</span>`;}
+
+function renderMarket(d,p){
+  if(!d){document.getElementById("mkt-load").innerHTML='<div class="err-box">暫無資料</div>';return;}
+  const alerts=[];
+  [{l:'WTI原油',c:d.wti,v:p?.wti},{l:'LME銅',c:d.copper_lme,v:p?.copper_lme},{l:'錫',c:d.tin_lme,v:p?.tin_lme},{l:'BDI',c:d.bdi,v:p?.bdi}]
+    .forEach(({l,c,v})=>{const g=chg(c,v);if(g!==null&&Math.abs(g)>=3)alerts.push(`<b>${l}</b>${g>0?'漲':'跌'}${Math.abs(g).toFixed(1)}%`);});
+
+  document.getElementById("mkt-load").style.display="none";
+  document.getElementById("mkt-body").style.display="block";
+  document.getElementById("mkt-body").innerHTML=`
+    <div class="date-row">
+      <span class="date-lbl">LAST UPDATED</span>
+      <span class="date-val">${d.trade_date}</span>
+    </div>
+    ${alerts.length?`<div class="alert">⚠ 重大波動：${alerts.join('、')}</div>`:''}
+    <div class="kpi-grid">
+      <div class="kcard" style="--ca:#4f9cf9"><div class="klabel">USD / TWD</div><div class="kval mono">${(+d.usd_twd).toFixed(3)}</div><div class="kchg">${fc(chg(d.usd_twd,p?.usd_twd))}</div><div class="ksub">美元匯率</div></div>
+      <div class="kcard" style="--ca:#f87171"><div class="klabel">COPPER LME</div><div class="kval mono">${(+d.copper_lme).toLocaleString()}</div><div class="kchg">${fh(chg(d.copper_lme,p?.copper_lme))}</div><div class="ksub">USD/MT</div></div>
+      <div class="kcard" style="--ca:#fb923c"><div class="klabel">BRENT CRUDE</div><div class="kval mono">${(+d.brent).toFixed(2)}</div><div class="kchg">${fh(chg(d.brent,p?.brent))}</div><div class="ksub">USD/bbl</div></div>
+      <div class="kcard" style="--ca:#38bdf8"><div class="klabel">BDI</div><div class="kval mono">${(+d.bdi).toLocaleString()}</div><div class="kchg">${fh(chg(d.bdi,p?.bdi))}</div><div class="ksub">航運指數</div></div>
+    </div>
+    ${sec('fx','匯率',`<table class="tbl">
+      <tr><td>🇺🇸 美元 USD</td><td>${(+d.usd_twd).toFixed(3)}</td><td>${fc(chg(d.usd_twd,p?.usd_twd))}</td></tr>
+      <tr><td>🇪🇺 歐元 EUR</td><td>${(+d.eur_twd).toFixed(3)}</td><td>${fc(chg(d.eur_twd,p?.eur_twd))}</td></tr>
+      <tr><td>🇨🇳 人民幣 CNY</td><td>${(+d.cny_twd).toFixed(4)}</td><td>${fc(chg(d.cny_twd,p?.cny_twd))}</td></tr>
+      <tr><td>🇯🇵 日元 JPY</td><td>${(+d.jpy_twd).toFixed(4)}</td><td>${fc(chg(d.jpy_twd,p?.jpy_twd))}</td></tr>
+    </table>`)}
+    ${sec('lme','LME 基本金屬',`<table class="tbl">
+      <tr><td>🔶 銅</td><td>${(+d.copper_lme).toLocaleString()}</td><td>${fh(chg(d.copper_lme,p?.copper_lme))}</td></tr>
+      <tr><td>鋁</td><td>${(+d.aluminium_lme).toLocaleString()}</td><td>${fh(chg(d.aluminium_lme,p?.aluminium_lme))}</td></tr>
+      <tr><td>鋅</td><td>${(+d.zinc_lme).toLocaleString()}</td><td>${fh(chg(d.zinc_lme,p?.zinc_lme))}</td></tr>
+      <tr><td>錫</td><td>${(+d.tin_lme).toLocaleString()}</td><td>${fh(chg(d.tin_lme,p?.tin_lme))}</td></tr>
+      <tr><td>鎳</td><td>${(+d.nickel_lme).toLocaleString()}</td><td>${fh(chg(d.nickel_lme,p?.nickel_lme))}</td></tr>
+      <tr><td>鉛</td><td>${(+d.lead_lme).toLocaleString()}</td><td>${fh(chg(d.lead_lme,p?.lead_lme))}</td></tr>
+    </table>`)}
+    ${sec('pm','貴金屬',`<table class="tbl">
+      <tr><td>🥇 黃金</td><td>${(+d.gold).toLocaleString()}</td><td>${fc(chg(d.gold,p?.gold))}</td></tr>
+      <tr><td>🥈 白銀</td><td>${(+d.silver).toFixed(2)}</td><td>${fc(chg(d.silver,p?.silver))}</td></tr>
+      <tr><td>鉑金</td><td>${(+d.platinum).toLocaleString()}</td><td>${fc(chg(d.platinum,p?.platinum))}</td></tr>
+      <tr><td>鈀金</td><td>${(+d.palladium).toLocaleString()}</td><td>${fc(chg(d.palladium,p?.palladium))}</td></tr>
+    </table>`)}
+    ${sec('en','能源',`<table class="tbl">
+      <tr><td>WTI 原油</td><td>${(+d.wti).toFixed(2)}</td><td>${fh(chg(d.wti,p?.wti))}</td></tr>
+      <tr><td>Brent 原油</td><td>${(+d.brent).toFixed(2)}</td><td>${fh(chg(d.brent,p?.brent))}</td></tr>
+    </table>`)}
+    ${sec('sh','航運',`<table class="tbl">
+      <tr><td>BDI 綜合</td><td>${(+d.bdi).toLocaleString()}</td><td>${fh(chg(d.bdi,p?.bdi))}</td></tr>
+      <tr><td>BCI 海岬型</td><td>${(+d.bci).toLocaleString()}</td><td>${fh(chg(d.bci,p?.bci))}</td></tr>
+      <tr><td>BPI 巴拿馬型</td><td>${(+d.bpi).toLocaleString()}</td><td>${fh(chg(d.bpi,p?.bpi))}</td></tr>
+      <tr><td>BSI 超輕便型</td><td>${(+d.bsi).toLocaleString()}</td><td>${fh(chg(d.bsi,p?.bsi))}</td></tr>
+    </table>`)}
+    ${sec('ore','鐵礦石',`<table class="tbl">
+      <tr><td>58% 鐵礦石</td><td>${(+d.iron_ore_58).toFixed(2)}</td><td>${fh(chg(d.iron_ore_58,p?.iron_ore_58))}</td></tr>
+      <tr><td>62% 鐵礦石</td><td>${(+d.iron_ore_62).toFixed(2)}</td><td>${fh(chg(d.iron_ore_62,p?.iron_ore_62))}</td></tr>
+    </table>`)}
+  `;
+}
+
+function sec(id,title,body){
+  return`<div class="sec"><div class="sec-hdr" onclick="togSec('${id}')"><span class="sec-title">${title}</span><span class="sec-tog" id="${id}-tog">▾</span></div><div id="${id}-body">${body}</div></div>`;
+}
+function togSec(id){
+  const b=document.getElementById(`${id}-body`),t=document.getElementById(`${id}-tog`);
+  if(!b)return; const h=b.style.display==='none';
+  b.style.display=h?'':'none'; t.textContent=h?'▾':'▸';
+}
+
+// ── 趨勢圖 ──
+function showTrend(type,btn){
+  document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const labels=trendData.map(d=>d.trade_date.slice(5));
+  const ds={
+    fx:[{label:'USD/TWD',data:trendData.map(d=>+d.usd_twd),borderColor:'#4f9cf9',tension:.3,pointRadius:2}],
+    metal:[
+      {label:'銅(÷10)',data:trendData.map(d=>(+d.copper_lme/10).toFixed(0)),borderColor:'#f87171',tension:.3,pointRadius:2},
+      {label:'鋁',data:trendData.map(d=>+d.aluminium_lme),borderColor:'#94a3b8',tension:.3,pointRadius:2},
+      {label:'鋅',data:trendData.map(d=>+d.zinc_lme),borderColor:'#4ade80',tension:.3,pointRadius:2},
+    ],
+    energy:[
+      {label:'WTI',data:trendData.map(d=>+d.wti),borderColor:'#fb923c',tension:.3,pointRadius:2},
+      {label:'Brent',data:trendData.map(d=>+d.brent),borderColor:'#fbbf24',tension:.3,pointRadius:2,borderDash:[4,3]},
+    ],
+    bdi:[{label:'BDI',data:trendData.map(d=>+d.bdi),borderColor:'#38bdf8',tension:.3,pointRadius:2,fill:true,backgroundColor:'rgba(56,189,248,.05)'}],
+    precious:[
+      {label:'黃金(÷10)',data:trendData.map(d=>(+d.gold/10).toFixed(0)),borderColor:'#fbbf24',tension:.3,pointRadius:2},
+      {label:'白銀',data:trendData.map(d=>+d.silver),borderColor:'#94a3b8',tension:.3,pointRadius:2},
+    ],
+  };
+  if(trendChart)trendChart.destroy();
+  trendChart=new Chart(document.getElementById('trendChart'),{
+    type:'line',data:{labels,datasets:ds[type]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#8892a4',font:{size:10},boxWidth:10,padding:8}}},
+      scales:{x:{ticks:{color:'#4a5568',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}},
+              y:{ticks:{color:'#4a5568',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}}}
+    }
+  });
+}
+
+// ── RFP ──
+async function loadRFP(){
+  try{
+    const [cases,summary]=await Promise.all([
+      sb("rfp_cases","?order=days_elapsed.desc&limit=200"),
+      sb("rfp_summary","?order=total.desc")
+    ]);
+    rfpData=cases; summaryData=summary;
+    rfpFiltered=cases;
+    renderRFP();
+  }catch(e){
+    document.getElementById("rfp-load").innerHTML=`<div class="err-box">⚠ 無法載入案件資料<br><small>${e.message}</small></div>`;
+  }
+}
+
+const ownerColors=['#4f9cf9','#4ade80','#fb923c','#f87171','#a78bfa','#fbbf24'];
+
+function renderRFP(){
+  document.getElementById("rfp-load").style.display="none";
+  const body=document.getElementById("rfp-body");
+  body.style.display="block";
+
+  // 匯整表
+  const sumCards=summaryData.map((s,i)=>{
+    const active=s.rfp_count>0||s.pending_count>0;
+    return`<div class="scard oc-${i} ${active?'highlight':''}">
+      <div class="scard-name" style="color:${ownerColors[i]||'var(--text)'}">${s.owner}</div>
+      <div class="scard-stats">
+        <div class="sstat"><div class="sstat-val" style="color:${ownerColors[i]||'var(--accent)'}">${s.total}</div><div class="sstat-lbl">總件</div></div>
+        <div class="sstat"><div class="sstat-val" style="color:var(--accent)">${s.rfp_count}</div><div class="sstat-lbl">RFP</div></div>
+        <div class="sstat"><div class="sstat-val" style="color:var(--warn)">${s.pending_count}</div><div class="sstat-lbl">暫緩</div></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const total=summaryData.reduce((a,s)=>a+s.total,0);
+  const rfpTotal=summaryData.reduce((a,s)=>a+s.rfp_count,0);
+  const pendTotal=summaryData.reduce((a,s)=>a+s.pending_count,0);
+  const over90=rfpData.filter(d=>d.days_elapsed>90).length;
+
+  const progDate=rfpData[0]?.progress_date||'—';
+
+  // 篩選選項
+  const owners=[...new Set(rfpData.map(d=>d.owner).filter(Boolean))].sort();
+  const ownerOpts=owners.map(o=>`<option value="${o}">${o}</option>`).join('');
+
+  body.innerHTML=`
+    <div class="summary-title">承辦人匯整 — ${progDate} 更新</div>
+    <div class="summary-grid">${sumCards}</div>
+
+    <div class="subtotal-bar">
+      <div class="sub-item"><div class="sub-val">${total}</div><div class="sub-lbl">總承辦件</div></div>
+      <div class="sub-item"><div class="sub-val">${rfpTotal}</div><div class="sub-lbl">RFP進行中</div></div>
+      <div class="sub-item"><div class="sub-val" style="color:var(--warn)">${pendTotal}</div><div class="sub-lbl">暫緩</div></div>
+      <div class="sub-item"><div class="sub-val" style="color:var(--up)">${over90}</div><div class="sub-lbl">&gt;90天</div></div>
+    </div>
+
+    <div class="list-hdr">
+      <span class="list-title">承辦中案件（${rfpData.length} 筆）</span>
+    </div>
+    <div class="filter-row">
+      <input class="search-in" id="rfp-q" placeholder="搜尋案件名稱或單號..." oninput="filterRFP()">
+      <select class="owner-sel" id="rfp-ow" onchange="filterRFP()">
+        <option value="">全部</option>${ownerOpts}
+      </select>
+    </div>
+    <div id="rfp-list" class="rfp-list"></div>
+  `;
+  rfpPage=0;
+  renderList();
+}
+
+function filterRFP(){
+  const q=(document.getElementById("rfp-q")?.value||"").toLowerCase();
+  const ow=document.getElementById("rfp-ow")?.value||"";
+  rfpFiltered=rfpData.filter(d=>{
+    const mq=!q||(d.case_name||"").toLowerCase().includes(q)||(d.case_no||"").toLowerCase().includes(q);
+    const mo=!ow||d.owner===ow;
+    return mq&&mo;
+  });
+  rfpPage=0; renderList();
+}
+
+function renderList(){
+  const list=document.getElementById("rfp-list");
+  if(!list)return;
+  const slice=rfpFiltered.slice(0,(rfpPage+1)*PAGE_SIZE);
+  if(slice.length===0){list.innerHTML='<div class="no-data">找不到符合的案件</div>';return;}
+
+  const ownerIdx={};
+  summaryData.forEach((s,i)=>ownerIdx[s.owner]=i);
+
+  const items=slice.map((d,idx)=>{
+    const days=d.days_elapsed||0;
+    const dcls=days>90?'d-over':days>60?'d-warn':'d-ok';
+    const budget=d.budget_twd?`NT$${(+d.budget_twd/10000).toFixed(0)}萬`:'—';
+    const oi=ownerIdx[d.owner]??0;
+    const prog=d.latest_progress||'';
+    const target=d.latest_target_date||'—';
+    const shortProg=prog.length>60?prog.slice(0,60)+'...':prog;
+    const hasMore=prog.length>60;
+    const uid=`p${idx}`;
+
+    return`<div class="rfp-item">
+      <div class="rfp-top">
+        <div class="rfp-name">${d.case_name||'—'}</div>
+        <span class="days-badge ${dcls}">${days}天</span>
+      </div>
+      <div class="rfp-meta">
+        <span class="owner-tag" style="color:${ownerColors[oi]};background:${ownerColors[oi]}18;border-color:${ownerColors[oi]}33">${d.owner||'—'}</span>
+        <span class="meta-tag">📋 ${d.case_no||'—'}</span>
+        <span class="meta-tag">🏢 ${d.unit||'—'}</span>
+        <span class="meta-tag">💰 ${budget}</span>
+      </div>
+      ${prog?`<div class="progress-box">
+        <div class="prog-hdr">
+          <span class="prog-date">${d.progress_date||''} 進度</span>
+          <span class="prog-target">預計結案：${target.replace(/\n/g,' / ')}</span>
+        </div>
+        <div class="prog-text" id="${uid}-s">${shortProg}</div>
+        ${hasMore?`<div class="prog-full prog-text" id="${uid}-f">${prog}</div>
+        <span class="prog-toggle" onclick="togProg('${uid}')" id="${uid}-t">▾ 展開</span>`:''}
+      </div>`:''}
+    </div>`;
+  }).join('');
+
+  const hasMore=rfpFiltered.length>slice.length;
+  const moreBtn=hasMore?`<button class="load-more" onclick="loadMore()">載入更多（剩 ${rfpFiltered.length-slice.length} 筆）</button>`:'';
+  list.innerHTML=items+moreBtn;
+}
+
+function togProg(uid){
+  const s=document.getElementById(`${uid}-s`);
+  const f=document.getElementById(`${uid}-f`);
+  const t=document.getElementById(`${uid}-t`);
+  if(!s||!f||!t)return;
+  const open=f.style.display==='block';
+  s.style.display=open?'':'none';
+  f.style.display=open?'none':'block';
+  t.textContent=open?'▾ 展開':'▴ 收合';
+}
+
+function loadMore(){rfpPage++;renderList();}
+
+// ── UI ──
+function switchTab(tab,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(`page-${tab}`).classList.add('active');
+  btn.classList.add('active');
+  if(tab==='chart'&&trendData.length>0) setTimeout(()=>showTrend('fx'),100);
+}
+
+async function refreshAll(){
+  const icon=document.getElementById("ri");
+  icon.classList.add('spin');
+  document.getElementById("mkt-load").style.display="flex";
+  document.getElementById("mkt-body").style.display="none";
+  document.getElementById("rfp-load").style.display="flex";
+  document.getElementById("rfp-body").style.display="none";
+  await Promise.all([loadMarket(),loadRFP()]);
+  icon.classList.remove('spin');
+}
+
+init();
+</script>
+</body>
+</html>
