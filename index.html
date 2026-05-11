@@ -4,187 +4,539 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>採購情報中心</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
+/* ════════════════════════════════
+   Design Tokens — Dark Blue
+   ════════════════════════════════ */
 :root{
-  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e2a;
-  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
-  --text:#e8eaf0;--text2:#8892a4;--text3:#4a5568;
-  --accent:#4f9cf9;--accent2:#38bdf8;
-  --up:#f87171;--dn:#4ade80;--warn:#fb923c;--gold:#fbbf24;
-  --r:12px;--rs:8px;
+  /* Backgrounds */
+  --bg:#07090f;
+  --bg2:#0d1119;
+  --bg3:#111827;
+  --bg4:#192032;
+
+  /* Borders */
+  --border:rgba(255,255,255,.055);
+  --border2:rgba(255,255,255,.11);
+  --border3:rgba(255,255,255,.18);
+
+  /* Text */
+  --text:#edf0f8;
+  --text2:#7a8ba8;
+  --text3:#3a4a62;
+
+  /* Brand */
+  --accent:#4f9cf9;
+  --accent2:#38bdf8;
+
+  /* Semantic */
+  --up:#ff6b6b;
+  --dn:#3ed98a;
+  --warn:#f5a623;
+  --gold:#fbbf24;
+
+  /* Radius */
+  --r:14px;
+  --rs:10px;
+  --rx:100px;
 }
+
+/* ── Reset ── */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;min-height:100vh;overscroll-behavior:none}
+
+body{
+  background:var(--bg);
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% -5%,rgba(79,156,249,.055),transparent),
+    radial-gradient(ellipse 50% 40% at 95% 95%,rgba(56,189,248,.03),transparent);
+  color:var(--text);
+  font-family:'Noto Sans TC',sans-serif;
+  min-height:100vh;
+  overscroll-behavior:none;
+  -webkit-font-smoothing:antialiased;
+}
+
 .mono{font-family:'DM Mono',monospace}
 
-/* Header */
-.hdr{position:sticky;top:0;z-index:100;background:rgba(13,15,20,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:13px 16px 11px;display:flex;align-items:center;justify-content:space-between}
-.hdr-l{display:flex;align-items:center;gap:10px}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
-.hdr-title{font-size:15px;font-weight:500}
-.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px}
-.refresh-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all .2s;display:flex;align-items:center;gap:5px}
-.refresh-btn:active{transform:scale(.96)}
-.spin{animation:spin .8s linear infinite}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ════════════════════════════════
+   Header
+   ════════════════════════════════ */
+.hdr{
+  position:sticky;top:0;z-index:100;
+  background:rgba(7,9,15,.9);
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  border-bottom:1px solid var(--border2);
+  padding:11px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+
+.hdr-l{display:flex;align-items:center;gap:12px}
+
+.logo-mark{
+  width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(145deg,rgba(79,156,249,.25),rgba(56,189,248,.15));
+  border:1px solid rgba(79,156,249,.28);
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;flex-shrink:0;
+  box-shadow:0 0 18px rgba(79,156,249,.12),inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.status-indicator{
+  display:flex;align-items:center;gap:7px;
+  padding:4px 10px 4px 7px;
+  background:rgba(62,217,138,.07);
+  border:1px solid rgba(62,217,138,.18);
+  border-radius:var(--rx);
+}
+.dot{
+  position:relative;width:7px;height:7px;border-radius:50%;
+  background:var(--dn);box-shadow:0 0 8px var(--dn);
+  animation:pulse 2.5s ease-in-out infinite;
+  flex-shrink:0;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.65;transform:scale(.8)}}
+.status-txt{font-size:10px;color:var(--dn);font-weight:500;letter-spacing:.04em}
+
+.hdr-title{font-size:14px;font-weight:600;letter-spacing:.01em}
+.hdr-sub{font-size:10px;color:var(--text2);margin-top:1px;letter-spacing:.04em}
+
+.refresh-btn{
+  background:rgba(79,156,249,.08);
+  border:1px solid rgba(79,156,249,.22);
+  color:var(--accent);
+  border-radius:var(--rx);
+  padding:7px 16px;font-size:11px;font-weight:600;
+  cursor:pointer;font-family:'Noto Sans TC',sans-serif;
+  transition:all .22s;display:flex;align-items:center;gap:5px;
+  letter-spacing:.04em;
+}
+.refresh-btn:hover{
+  background:rgba(79,156,249,.16);
+  border-color:rgba(79,156,249,.42);
+  box-shadow:0 0 16px rgba(79,156,249,.18);
+}
+.refresh-btn:active{transform:scale(.95)}
+.spin{animation:spin .75s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* Nav */
-.nav{display:flex;border-bottom:1px solid var(--border);background:var(--bg2);overflow-x:auto;scrollbar-width:none}
+/* ════════════════════════════════
+   Navigation
+   ════════════════════════════════ */
+.nav{
+  display:flex;
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  overflow-x:auto;scrollbar-width:none;
+  padding:0 8px;gap:4px;
+}
 .nav::-webkit-scrollbar{display:none}
-.nav-btn{flex:1;min-width:80px;padding:11px 8px;font-size:12px;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
-.nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
 
-/* Page */
+.nav-btn{
+  flex:1;min-width:90px;
+  padding:13px 10px 12px;
+  font-size:12px;font-weight:500;
+  color:var(--text2);
+  background:none;border:none;cursor:pointer;
+  font-family:'Noto Sans TC',sans-serif;
+  border-bottom:2px solid transparent;
+  transition:all .22s;
+  white-space:nowrap;letter-spacing:.02em;
+}
+.nav-btn:hover{color:var(--text)}
+.nav-btn.active{
+  color:var(--accent);
+  border-bottom-color:var(--accent);
+}
+
+/* ════════════════════════════════
+   Pages
+   ════════════════════════════════ */
 .page{display:none;padding:16px}
 .page.active{display:block}
 
-/* Loading */
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px}
-.spinner{width:28px;height:28px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
-.loading-txt{font-size:13px;color:var(--text2)}
+/* ════════════════════════════════
+   Loading
+   ════════════════════════════════ */
+.loading{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:80px 20px;gap:14px;
+}
+.spinner{
+  width:28px;height:28px;
+  border:2px solid var(--border2);
+  border-top-color:var(--accent);
+  border-radius:50%;
+  animation:spin .75s linear infinite;
+}
+.loading-txt{font-size:11px;color:var(--text3);letter-spacing:.08em}
 
-/* KPI Cards */
-.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.kcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 12px;position:relative;overflow:hidden}
-.kcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ca,var(--accent));opacity:.7}
-.klabel{font-size:10px;color:var(--text3);letter-spacing:.06em;margin-bottom:6px}
-.kval{font-size:22px;font-weight:500;font-family:'DM Mono',monospace;line-height:1}
-.kchg{font-size:11px;margin-top:5px;font-family:'DM Mono',monospace}
-.ksub{font-size:10px;color:var(--text3);margin-top:3px}
+/* ════════════════════════════════
+   KPI Cards
+   ════════════════════════════════ */
+.kpi-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin-bottom:16px;
+}
 
-/* Badges */
-.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;font-family:'DM Mono',monospace;font-weight:500}
-.b-up{background:rgba(248,113,113,.12);color:var(--up)}
-.b-dn{background:rgba(74,222,128,.12);color:var(--dn)}
-.b-neu{background:var(--bg3);color:var(--text3)}
-.b-hot{background:rgba(248,113,113,.2);color:var(--up);font-weight:700}
-.b-warn{background:rgba(251,146,60,.15);color:var(--warn)}
+.kcard{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:16px 14px;
+  position:relative;overflow:hidden;
+  transition:border-color .25s,box-shadow .25s;
+}
+.kcard:hover{
+  border-color:var(--border2);
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+}
+/* top accent bar */
+.kcard::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:var(--ca,var(--accent));
+  opacity:.85;
+}
+/* subtle gradient glow inside card */
+.kcard::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 70% at 10% 0%,var(--ca-alpha,rgba(79,156,249,.06)),transparent);
+  pointer-events:none;
+}
 
-/* Alert */
-.alert{background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);border-left:3px solid var(--warn);border-radius:var(--rs);padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--text2);line-height:1.6}
+.klabel{
+  font-size:9px;color:var(--text3);
+  letter-spacing:.14em;text-transform:uppercase;
+  font-weight:500;margin-bottom:8px;
+}
+.kval{
+  font-size:22px;font-weight:400;
+  font-family:'DM Mono',monospace;line-height:1;
+  position:relative;z-index:1;
+}
+.kchg{font-size:11px;margin-top:6px;font-family:'DM Mono',monospace}
+.ksub{font-size:11px;color:var(--text2);margin-top:4px;letter-spacing:.02em}
+.avg-val{font-size:11px;color:var(--text2);font-family:'DM Mono',monospace}
+
+/* ════════════════════════════════
+   Badges
+   ════════════════════════════════ */
+.badge{
+  display:inline-flex;align-items:center;
+  font-size:12px;padding:3px 10px;border-radius:var(--rx);
+  font-family:'DM Mono',monospace;font-weight:500;
+}
+.b-up{background:rgba(255,107,107,.12);color:var(--up);border:1px solid rgba(255,107,107,.2)}
+.b-dn{background:rgba(62,217,138,.1);color:var(--dn);border:1px solid rgba(62,217,138,.18)}
+.b-neu{background:rgba(255,255,255,.04);color:var(--text3);border:1px solid var(--border)}
+.b-hot{
+  background:rgba(255,107,107,.18);color:var(--up);
+  border:1px solid rgba(255,107,107,.3);
+  font-weight:700;
+  box-shadow:0 0 10px rgba(255,107,107,.12);
+}
+.b-warn{background:rgba(245,166,35,.12);color:var(--warn);border:1px solid rgba(245,166,35,.22)}
+
+/* ════════════════════════════════
+   Alert
+   ════════════════════════════════ */
+.alert{
+  background:rgba(245,166,35,.05);
+  border:1px solid rgba(245,166,35,.15);
+  border-left:3px solid var(--warn);
+  border-radius:var(--rs);
+  padding:11px 14px;margin-bottom:16px;
+  font-size:12px;color:var(--text2);line-height:1.7;
+}
 .alert b{color:var(--warn)}
 
-/* Date badge */
-.date-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.date-lbl{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.05em}
-.date-val{font-size:12px;color:var(--accent2);font-family:'DM Mono',monospace}
+/* ════════════════════════════════
+   Date Row
+   ════════════════════════════════ */
+.date-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+  padding:9px 14px;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--rs);
+}
+.date-lbl{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.08em}
+.date-val{font-size:12px;color:var(--accent2);font-family:'DM Mono',monospace;font-weight:500}
 
-/* Section */
-.sec{margin-bottom:14px}
-.sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;cursor:pointer;user-select:none}
-.sec-title{font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;font-weight:500}
-.sec-tog{font-size:11px;color:var(--text3)}
+/* ════════════════════════════════
+   Data Sections (collapsible)
+   ════════════════════════════════ */
+.sec{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  margin-bottom:10px;
+  overflow:hidden;
+}
+.sec-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;cursor:pointer;user-select:none;
+  transition:background .2s;
+}
+.sec-hdr:hover{background:rgba(255,255,255,.02)}
+.sec-title{
+  font-size:11px;color:var(--text2);
+  letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+}
+.sec-tog{font-size:13px;color:var(--text3);line-height:1}
 
-/* Table */
+.tbl-wrap{padding:0 4px 8px}
+
+/* ════════════════════════════════
+   Table
+   ════════════════════════════════ */
 .tbl{width:100%;border-collapse:collapse}
-.tbl tr{border-bottom:1px solid var(--border)}
-.tbl tr:last-child{border-bottom:none}
-.tbl td{padding:9px 4px;font-size:12px;vertical-align:middle}
-.tbl td:first-child{color:var(--text2);width:42%}
-.tbl td:nth-child(2){font-family:'DM Mono',monospace;text-align:right;font-size:13px}
-.tbl td:last-child{text-align:right;width:28%}
+.tbl tr{border-top:1px solid var(--border);transition:background .15s}
+.tbl tr:hover{background:rgba(255,255,255,.025)}
+.tbl td{padding:10px 10px;font-size:13px;vertical-align:middle}
+.tbl td:first-child{color:var(--text2);width:44%}
+.tbl td:nth-child(2){
+  font-family:'DM Mono',monospace;
+  text-align:right;font-size:15px;font-weight:500;
+}
+.tbl td:last-child{text-align:right;width:30%}
 
-/* Chart */
-.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px}
-.chart-title{font-size:11px;color:var(--text3);letter-spacing:.08em;margin-bottom:12px}
-.chart-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
-.ctab{font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:none;color:var(--text2);cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all .2s}
-.ctab.active{background:var(--accent);border-color:var(--accent);color:#fff}
-.chart-wrap{position:relative;height:180px}
+/* ════════════════════════════════
+   Chart
+   ════════════════════════════════ */
+.chart-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);padding:16px;margin-bottom:14px;
+}
+.chart-title{
+  font-size:9px;color:var(--text3);
+  letter-spacing:.14em;text-transform:uppercase;
+  font-weight:600;margin-bottom:14px;
+}
+.chart-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.ctab{
+  font-size:11px;padding:5px 13px;border-radius:var(--rx);
+  border:1px solid var(--border2);
+  background:transparent;color:var(--text2);
+  cursor:pointer;font-family:'Noto Sans TC',sans-serif;
+  transition:all .2s;font-weight:500;
+}
+.ctab:hover{color:var(--text);border-color:var(--border3)}
+.ctab.active{
+  background:var(--accent);border-color:var(--accent);
+  color:#fff;box-shadow:0 0 14px rgba(79,156,249,.3);
+}
+.chart-wrap{position:relative;height:190px}
 
-/* ── RFP 頁面 ── */
-/* 匯整表 */
-.summary-title{font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin-bottom:10px}
-.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.scard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:12px 12px;position:relative;overflow:hidden}
-.scard.highlight{border-color:rgba(79,156,249,.3)}
-.scard::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--sca,var(--bg3));border-radius:2px 0 0 2px}
-.scard-name{font-size:13px;font-weight:500;margin-bottom:8px}
-.scard-stats{display:flex;gap:10px}
+/* ════════════════════════════════
+   RFP — Summary Cards
+   ════════════════════════════════ */
+.summary-title{
+  font-size:9px;color:var(--text3);
+  letter-spacing:.14em;text-transform:uppercase;
+  font-weight:600;margin-bottom:12px;
+}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+
+.scard{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--rs);padding:13px 12px;
+  position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+.scard.highlight{border-color:rgba(79,156,249,.2)}
+.scard::before{
+  content:'';position:absolute;top:0;left:0;bottom:0;
+  width:3px;background:var(--sca,var(--bg4));border-radius:2px 0 0 2px;
+}
+.scard-name{font-size:12px;font-weight:600;margin-bottom:10px;padding-left:6px}
+.scard-stats{display:flex;gap:12px;padding-left:6px}
 .sstat{text-align:center}
-.sstat-val{font-size:18px;font-weight:500;font-family:'DM Mono',monospace}
-.sstat-lbl{font-size:9px;color:var(--text3);margin-top:1px}
+.sstat-val{font-size:18px;font-weight:500;font-family:'DM Mono',monospace;line-height:1}
+.sstat-lbl{font-size:9px;color:var(--text3);margin-top:3px;letter-spacing:.04em}
 
-/* 小計列 */
-.subtotal-bar{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.sub-item{text-align:center}
-.sub-val{font-size:16px;font-weight:500;font-family:'DM Mono',monospace;color:var(--accent)}
-.sub-lbl{font-size:10px;color:var(--text3)}
+/* ════════════════════════════════
+   RFP — Subtotal Bar
+   ════════════════════════════════ */
+.subtotal-bar{
+  background:linear-gradient(135deg,var(--bg3),var(--bg2));
+  border:1px solid var(--border2);
+  border-radius:var(--rs);
+  padding:14px 10px;margin-bottom:16px;
+  display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px 1fr;
+  align-items:center;gap:0;
+}
+.sub-divider{width:1px;height:28px;background:var(--border);justify-self:center}
+.sub-item{text-align:center;padding:0 4px}
+.sub-val{
+  font-size:20px;font-weight:400;
+  font-family:'DM Mono',monospace;color:var(--accent);
+  line-height:1;
+}
+.sub-lbl{font-size:9px;color:var(--text3);margin-top:4px;letter-spacing:.04em}
 
-/* 案件列表 */
+/* ════════════════════════════════
+   RFP — List
+   ════════════════════════════════ */
 .list-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.list-title{font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;font-weight:500}
-.filter-row{display:flex;gap:8px;margin-bottom:12px}
-.search-in{flex:1;background:var(--bg2);border:1px solid var(--border2);color:var(--text);border-radius:var(--rs);padding:9px 12px;font-size:13px;font-family:'Noto Sans TC',sans-serif;outline:none}
-.search-in:focus{border-color:var(--accent)}
-.owner-sel{background:var(--bg2);border:1px solid var(--border2);color:var(--text2);border-radius:var(--rs);padding:9px 10px;font-size:12px;font-family:'Noto Sans TC',sans-serif;outline:none}
+.list-title{font-size:9px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+
+.filter-row{display:flex;gap:8px;margin-bottom:14px}
+.search-in{
+  flex:1;background:var(--bg2);
+  border:1px solid var(--border2);
+  color:var(--text);border-radius:var(--rs);
+  padding:10px 14px;font-size:13px;
+  font-family:'Noto Sans TC',sans-serif;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.search-in::placeholder{color:var(--text3)}
+.search-in:focus{
+  border-color:rgba(79,156,249,.5);
+  box-shadow:0 0 0 3px rgba(79,156,249,.08);
+}
+.owner-sel{
+  background:var(--bg2);border:1px solid var(--border2);
+  color:var(--text2);border-radius:var(--rs);
+  padding:10px 12px;font-size:12px;
+  font-family:'Noto Sans TC',sans-serif;outline:none;cursor:pointer;
+}
+
 .rfp-list{display:flex;flex-direction:column;gap:8px}
-.rfp-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:13px 14px;transition:border-color .2s}
-.rfp-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
-.rfp-name{font-size:13px;line-height:1.4;flex:1}
-.days-badge{font-size:11px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
-.d-ok{background:rgba(74,222,128,.1);color:var(--dn)}
-.d-warn{background:rgba(251,146,60,.1);color:var(--warn)}
-.d-over{background:rgba(248,113,113,.1);color:var(--up)}
-.rfp-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+
+.rfp-item{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px 16px;
+  transition:border-color .22s,box-shadow .22s;
+}
+.rfp-item:hover{
+  border-color:var(--border2);
+  box-shadow:0 3px 14px rgba(0,0,0,.2);
+}
+
+.rfp-top{
+  display:flex;align-items:flex-start;
+  justify-content:space-between;gap:10px;margin-bottom:9px;
+}
+.rfp-name{font-size:13px;line-height:1.5;flex:1;font-weight:500}
+
+.days-badge{
+  font-size:10px;font-family:'DM Mono',monospace;
+  padding:3px 10px;border-radius:var(--rx);
+  white-space:nowrap;flex-shrink:0;font-weight:500;
+}
+.d-ok{background:rgba(62,217,138,.08);color:var(--dn);border:1px solid rgba(62,217,138,.18)}
+.d-warn{background:rgba(245,166,35,.1);color:var(--warn);border:1px solid rgba(245,166,35,.2)}
+.d-over{
+  background:rgba(255,107,107,.1);color:var(--up);
+  border:1px solid rgba(255,107,107,.22);
+}
+
+.rfp-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px;align-items:center}
 .meta-tag{font-size:10px;color:var(--text3)}
-.owner-tag{font-size:10px;padding:1px 8px;border-radius:20px;background:rgba(79,156,249,.1);color:var(--accent);border:1px solid rgba(79,156,249,.2)}
-/* 進度區塊 */
-.progress-box{background:var(--bg3);border-radius:var(--rs);padding:9px 10px;border-left:2px solid var(--border2)}
-.prog-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-.prog-date{font-size:10px;color:var(--accent2);font-family:'DM Mono',monospace}
+.owner-tag{
+  font-size:10px;padding:2px 10px;border-radius:var(--rx);font-weight:500;
+}
+
+.progress-box{
+  background:var(--bg3);
+  border-radius:var(--rs);padding:10px 12px;
+  border:1px solid var(--border);
+  border-left:2px solid var(--border2);
+}
+.prog-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.prog-date{font-size:10px;color:var(--accent2);font-family:'DM Mono',monospace;font-weight:500}
 .prog-target{font-size:10px;color:var(--text3)}
-.prog-text{font-size:12px;color:var(--text2);line-height:1.6;white-space:pre-wrap;word-break:break-all}
-/* 展開/收合進度 */
-.prog-toggle{font-size:11px;color:var(--text3);cursor:pointer;margin-top:4px;display:inline-block}
+.prog-text{font-size:12px;color:var(--text2);line-height:1.7;white-space:pre-wrap;word-break:break-all}
+.prog-toggle{font-size:11px;color:var(--accent);cursor:pointer;margin-top:5px;display:inline-block}
 .prog-full{display:none}
 
+/* ════════════════════════════════
+   Misc
+   ════════════════════════════════ */
 .no-data{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
-.load-more{width:100%;margin-top:10px;padding:12px;background:var(--bg2);border:1px solid var(--border2);color:var(--text2);border-radius:var(--rs);font-size:13px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all .2s}
-.load-more:active{background:var(--bg3)}
-.err-box{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:var(--r);padding:16px;text-align:center;font-size:13px;color:var(--up);margin:20px 0}
-.footer{padding:20px 16px;text-align:center;font-size:10px;color:var(--text3)}
+.load-more{
+  width:100%;margin-top:10px;padding:13px;
+  background:var(--bg2);border:1px solid var(--border2);
+  color:var(--text2);border-radius:var(--rs);
+  font-size:13px;cursor:pointer;
+  font-family:'Noto Sans TC',sans-serif;transition:all .2s;
+}
+.load-more:hover{background:var(--bg3);color:var(--text);border-color:var(--border3)}
+.load-more:active{transform:scale(.99)}
 
-/* 承辦人顏色 */
-.oc-0{--sca:#4f9cf9}.oc-1{--sca:#4ade80}.oc-2{--sca:#fb923c}.oc-3{--sca:#f87171}.oc-4{--sca:#a78bfa}.oc-5{--sca:#fbbf24}
+.err-box{
+  background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);
+  border-radius:var(--r);padding:20px;
+  text-align:center;font-size:13px;color:var(--up);margin:20px 0;
+}
+.footer{
+  padding:18px 16px;text-align:center;
+  font-size:9px;color:var(--text3);
+  letter-spacing:.08em;
+  border-top:1px solid var(--border);
+}
+
+/* ── Owner accent colors ── */
+.oc-0{--sca:#4f9cf9}.oc-1{--sca:#3ed98a}.oc-2{--sca:#fb923c}
+.oc-3{--sca:#ff6b6b}.oc-4{--sca:#a78bfa}.oc-5{--sca:#fbbf24}
 </style>
 </head>
 <body>
 
+<!-- ══ Header ══ -->
 <div class="hdr">
   <div class="hdr-l">
-    <div class="dot"></div>
+    <div class="logo-mark">📡</div>
     <div>
       <div class="hdr-title">採購情報中心</div>
-      <div class="hdr-sub">遠東新世紀 設備採購組</div>
+      <div class="hdr-sub">遠東新世紀 · 設備採購組</div>
     </div>
   </div>
-  <button class="refresh-btn" onclick="refreshAll()">
-    <span id="ri">↻</span> 更新
-  </button>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="status-indicator">
+      <div class="dot"></div>
+      <span class="status-txt">LIVE</span>
+    </div>
+    <button class="refresh-btn" onclick="refreshAll()">
+      <span id="ri">↻</span> 更新
+    </button>
+  </div>
 </div>
 
+<!-- ══ Nav ══ -->
 <div class="nav">
   <button class="nav-btn active" onclick="switchTab('market',this)">📈 今日行情</button>
   <button class="nav-btn" onclick="switchTab('chart',this)">📊 趨勢圖</button>
   <button class="nav-btn" onclick="switchTab('rfp',this)">📋 RFP 案件</button>
 </div>
 
-<!-- 今日行情 -->
+<!-- ══ 今日行情 ══ -->
 <div class="page active" id="page-market">
-  <div id="mkt-load" class="loading"><div class="spinner"></div><div class="loading-txt">載入行情資料中...</div></div>
+  <div id="mkt-load" class="loading">
+    <div class="spinner"></div>
+    <div class="loading-txt">載入行情資料中...</div>
+  </div>
   <div id="mkt-body" style="display:none"></div>
 </div>
 
-<!-- 趨勢圖 -->
+<!-- ══ 趨勢圖 ══ -->
 <div class="page" id="page-chart">
-  <div id="ch-load" class="loading"><div class="spinner"></div><div class="loading-txt">載入趨勢資料中...</div></div>
+  <div id="ch-load" class="loading">
+    <div class="spinner"></div>
+    <div class="loading-txt">載入趨勢資料中...</div>
+  </div>
   <div id="ch-body" style="display:none">
     <div class="chart-card">
-      <div class="chart-title">PRICE TREND</div>
+      <div class="chart-title">Price Trend</div>
       <div class="chart-tabs">
         <button class="ctab active" onclick="showTrend('fx',this)">匯率</button>
         <button class="ctab" onclick="showTrend('metal',this)">LME</button>
@@ -197,17 +549,20 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-seri
   </div>
 </div>
 
-<!-- RFP 案件 -->
+<!-- ══ RFP 案件 ══ -->
 <div class="page" id="page-rfp">
-  <div id="rfp-load" class="loading"><div class="spinner"></div><div class="loading-txt">載入案件資料中...</div></div>
+  <div id="rfp-load" class="loading">
+    <div class="spinner"></div>
+    <div class="loading-txt">載入案件資料中...</div>
+  </div>
   <div id="rfp-body" style="display:none"></div>
 </div>
 
-<div class="footer">資料來源：Supabase ｜ 遠東新世紀採購部 設備組</div>
+<div class="footer">資料來源：Supabase &nbsp;·&nbsp; 遠東新世紀採購部 設備組</div>
 
 <script>
 const SURL = "https://idomnpkciupehnpthmgx.supabase.co";
-const SKEY = "sb_publishable_NLXekzegHw_-kYMTgcCnug_KiHV2Gpx"; // ← 填入完整 sb_publishable_... key
+const SKEY = "sb_publishable_NLXekzegHw_-kYMTgcCnug_KiHV2Gpx";
 
 let mktData=[], trendData=[], rfpData=[], summaryData=[];
 let trendChart=null, rfpFiltered=[], rfpPage=0;
@@ -223,12 +578,21 @@ async function sb(table,params=""){
 
 async function init(){ await Promise.all([loadMarket(),loadRFP()]); }
 
-// ── 行情 ──
+/* ── 行情 ── */
 async function loadMarket(){
   try{
-    const d=await sb("market_daily","?order=trade_date.desc&limit=30");
+    const d=await sb("market_daily","?order=trade_date.desc&limit=90");
     mktData=d; trendData=[...d].reverse();
-    renderMarket(d[0],d[1]);
+    const fields=['usd_twd','eur_twd','cny_twd','jpy_twd',
+      'copper_lme','aluminium_lme','zinc_lme','tin_lme','nickel_lme','lead_lme',
+      'gold','silver','platinum','palladium',
+      'wti','brent','bdi','bci','bpi','bsi','iron_ore_58','iron_ore_62'];
+    const avgs={};
+    fields.forEach(f=>{
+      const vals=d.map(r=>+r[f]).filter(v=>!isNaN(v)&&v>0);
+      avgs[f]=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
+    });
+    renderMarket(d[0],d[1],avgs);
     document.getElementById("ch-load").style.display="none";
     document.getElementById("ch-body").style.display="block";
   }catch(e){
@@ -237,76 +601,127 @@ async function loadMarket(){
 }
 
 function chg(c,p){if(!c||!p||p==0)return null;return((c-p)/Math.abs(p)*100);}
-function fc(c){if(c===null)return'<span class="badge b-neu">—</span>';const s=c>0?'+':'';const cl=c>0?'b-up':c<0?'b-dn':'b-neu';return`<span class="badge ${cl}">${s}${c.toFixed(2)}%</span>`;}
-function fh(c){if(c===null)return'<span class="badge b-neu">—</span>';const hot=Math.abs(c)>=3;const s=c>0?'+':'';const cl=hot?'b-hot':c>0?'b-up':c<0?'b-dn':'b-neu';const f=hot?(c>0?' 🔺':' 🔻'):'';return`<span class="badge ${cl}">${s}${c.toFixed(2)}%${f}</span>`;}
+function fa(v,dec,isInt=false){
+  if(v===null||v===undefined)return'<span class="avg-val">3M —</span>';
+  const s=isInt?Math.round(v).toLocaleString():(+v).toFixed(dec);
+  return`<span class="avg-val">3M avg ${s}</span>`;
+}
+function fc(c){
+  if(c===null)return'<span class="badge b-neu">—</span>';
+  const s=c>0?'+':'';
+  const cl=c>0?'b-up':c<0?'b-dn':'b-neu';
+  return`<span class="badge ${cl}">${s}${c.toFixed(2)}%</span>`;
+}
+function fh(c){
+  if(c===null)return'<span class="badge b-neu">—</span>';
+  const hot=Math.abs(c)>=3;
+  const s=c>0?'+':'';
+  const cl=hot?'b-hot':c>0?'b-up':c<0?'b-dn':'b-neu';
+  const f=hot?(c>0?' 🔺':' 🔻'):'';
+  return`<span class="badge ${cl}">${s}${c.toFixed(2)}%${f}</span>`;
+}
 
-function renderMarket(d,p){
+function renderMarket(d,p,avgs={}){
   if(!d){document.getElementById("mkt-load").innerHTML='<div class="err-box">暫無資料</div>';return;}
   const alerts=[];
-  [{l:'WTI原油',c:d.wti,v:p?.wti},{l:'LME銅',c:d.copper_lme,v:p?.copper_lme},{l:'錫',c:d.tin_lme,v:p?.tin_lme},{l:'BDI',c:d.bdi,v:p?.bdi}]
-    .forEach(({l,c,v})=>{const g=chg(c,v);if(g!==null&&Math.abs(g)>=3)alerts.push(`<b>${l}</b>${g>0?'漲':'跌'}${Math.abs(g).toFixed(1)}%`);});
+  [{l:'WTI原油',c:d.wti,v:p?.wti},{l:'LME銅',c:d.copper_lme,v:p?.copper_lme},
+   {l:'錫',c:d.tin_lme,v:p?.tin_lme},{l:'BDI',c:d.bdi,v:p?.bdi}]
+    .forEach(({l,c,v})=>{
+      const g=chg(c,v);
+      if(g!==null&&Math.abs(g)>=3)alerts.push(`<b>${l}</b>${g>0?'漲':'跌'}${Math.abs(g).toFixed(1)}%`);
+    });
 
   document.getElementById("mkt-load").style.display="none";
   document.getElementById("mkt-body").style.display="block";
   document.getElementById("mkt-body").innerHTML=`
     <div class="date-row">
-      <span class="date-lbl">LAST UPDATED</span>
+      <span class="date-lbl">Last Updated</span>
       <span class="date-val">${d.trade_date}</span>
     </div>
     ${alerts.length?`<div class="alert">⚠ 重大波動：${alerts.join('、')}</div>`:''}
     <div class="kpi-grid">
-      <div class="kcard" style="--ca:#4f9cf9"><div class="klabel">USD / TWD</div><div class="kval mono">${(+d.usd_twd).toFixed(3)}</div><div class="kchg">${fc(chg(d.usd_twd,p?.usd_twd))}</div><div class="ksub">美元匯率</div></div>
-      <div class="kcard" style="--ca:#f87171"><div class="klabel">COPPER LME</div><div class="kval mono">${(+d.copper_lme).toLocaleString()}</div><div class="kchg">${fh(chg(d.copper_lme,p?.copper_lme))}</div><div class="ksub">USD/MT</div></div>
-      <div class="kcard" style="--ca:#fb923c"><div class="klabel">BRENT CRUDE</div><div class="kval mono">${(+d.brent).toFixed(2)}</div><div class="kchg">${fh(chg(d.brent,p?.brent))}</div><div class="ksub">USD/bbl</div></div>
-      <div class="kcard" style="--ca:#38bdf8"><div class="klabel">BDI</div><div class="kval mono">${(+d.bdi).toLocaleString()}</div><div class="kchg">${fh(chg(d.bdi,p?.bdi))}</div><div class="ksub">航運指數</div></div>
+      <div class="kcard" style="--ca:#4f9cf9;--ca-alpha:rgba(79,156,249,.07)">
+        <div class="klabel">USD / TWD</div>
+        <div class="kval mono">${(+d.usd_twd).toFixed(3)}</div>
+        <div class="kchg">${fc(chg(d.usd_twd,p?.usd_twd))}</div>
+        <div class="ksub">美元匯率 · 3M avg ${avgs.usd_twd?.toFixed(3)||'—'}</div>
+      </div>
+      <div class="kcard" style="--ca:#ff6b6b;--ca-alpha:rgba(255,107,107,.06)">
+        <div class="klabel">Copper LME</div>
+        <div class="kval mono">${(+d.copper_lme).toLocaleString()}</div>
+        <div class="kchg">${fh(chg(d.copper_lme,p?.copper_lme))}</div>
+        <div class="ksub">USD / MT · 3M avg ${avgs.copper_lme?Math.round(avgs.copper_lme).toLocaleString():'—'}</div>
+      </div>
+      <div class="kcard" style="--ca:#fb923c;--ca-alpha:rgba(251,146,60,.06)">
+        <div class="klabel">Brent Crude</div>
+        <div class="kval mono">${(+d.brent).toFixed(2)}</div>
+        <div class="kchg">${fh(chg(d.brent,p?.brent))}</div>
+        <div class="ksub">USD / bbl · 3M avg ${avgs.brent?.toFixed(2)||'—'}</div>
+      </div>
+      <div class="kcard" style="--ca:#38bdf8;--ca-alpha:rgba(56,189,248,.06)">
+        <div class="klabel">BDI</div>
+        <div class="kval mono">${(+d.bdi).toLocaleString()}</div>
+        <div class="kchg">${fh(chg(d.bdi,p?.bdi))}</div>
+        <div class="ksub">航運指數 · 3M avg ${avgs.bdi?Math.round(avgs.bdi).toLocaleString():'—'}</div>
+      </div>
     </div>
     ${sec('fx','匯率',`<table class="tbl">
-      <tr><td>🇺🇸 美元 USD</td><td>${(+d.usd_twd).toFixed(3)}</td><td>${fc(chg(d.usd_twd,p?.usd_twd))}</td></tr>
-      <tr><td>🇪🇺 歐元 EUR</td><td>${(+d.eur_twd).toFixed(3)}</td><td>${fc(chg(d.eur_twd,p?.eur_twd))}</td></tr>
-      <tr><td>🇨🇳 人民幣 CNY</td><td>${(+d.cny_twd).toFixed(4)}</td><td>${fc(chg(d.cny_twd,p?.cny_twd))}</td></tr>
-      <tr><td>🇯🇵 日元 JPY</td><td>${(+d.jpy_twd).toFixed(4)}</td><td>${fc(chg(d.jpy_twd,p?.jpy_twd))}</td></tr>
+      <tr><td>🇺🇸 美元 USD</td><td>${(+d.usd_twd).toFixed(3)}<br>${fa(avgs.usd_twd,3)}</td><td>${fc(chg(d.usd_twd,p?.usd_twd))}</td></tr>
+      <tr><td>🇪🇺 歐元 EUR</td><td>${(+d.eur_twd).toFixed(3)}<br>${fa(avgs.eur_twd,3)}</td><td>${fc(chg(d.eur_twd,p?.eur_twd))}</td></tr>
+      <tr><td>🇨🇳 人民幣 CNY</td><td>${(+d.cny_twd).toFixed(4)}<br>${fa(avgs.cny_twd,4)}</td><td>${fc(chg(d.cny_twd,p?.cny_twd))}</td></tr>
+      <tr><td>🇯🇵 日元 JPY</td><td>${(+d.jpy_twd).toFixed(4)}<br>${fa(avgs.jpy_twd,4)}</td><td>${fc(chg(d.jpy_twd,p?.jpy_twd))}</td></tr>
     </table>`)}
     ${sec('lme','LME 基本金屬',`<table class="tbl">
-      <tr><td>🔶 銅</td><td>${(+d.copper_lme).toLocaleString()}</td><td>${fh(chg(d.copper_lme,p?.copper_lme))}</td></tr>
-      <tr><td>鋁</td><td>${(+d.aluminium_lme).toLocaleString()}</td><td>${fh(chg(d.aluminium_lme,p?.aluminium_lme))}</td></tr>
-      <tr><td>鋅</td><td>${(+d.zinc_lme).toLocaleString()}</td><td>${fh(chg(d.zinc_lme,p?.zinc_lme))}</td></tr>
-      <tr><td>錫</td><td>${(+d.tin_lme).toLocaleString()}</td><td>${fh(chg(d.tin_lme,p?.tin_lme))}</td></tr>
-      <tr><td>鎳</td><td>${(+d.nickel_lme).toLocaleString()}</td><td>${fh(chg(d.nickel_lme,p?.nickel_lme))}</td></tr>
-      <tr><td>鉛</td><td>${(+d.lead_lme).toLocaleString()}</td><td>${fh(chg(d.lead_lme,p?.lead_lme))}</td></tr>
+      <tr><td>🔶 銅</td><td>${(+d.copper_lme).toLocaleString()}<br>${fa(avgs.copper_lme,0,true)}</td><td>${fh(chg(d.copper_lme,p?.copper_lme))}</td></tr>
+      <tr><td>鋁</td><td>${(+d.aluminium_lme).toLocaleString()}<br>${fa(avgs.aluminium_lme,0,true)}</td><td>${fh(chg(d.aluminium_lme,p?.aluminium_lme))}</td></tr>
+      <tr><td>鋅</td><td>${(+d.zinc_lme).toLocaleString()}<br>${fa(avgs.zinc_lme,0,true)}</td><td>${fh(chg(d.zinc_lme,p?.zinc_lme))}</td></tr>
+      <tr><td>錫</td><td>${(+d.tin_lme).toLocaleString()}<br>${fa(avgs.tin_lme,0,true)}</td><td>${fh(chg(d.tin_lme,p?.tin_lme))}</td></tr>
+      <tr><td>鎳</td><td>${(+d.nickel_lme).toLocaleString()}<br>${fa(avgs.nickel_lme,0,true)}</td><td>${fh(chg(d.nickel_lme,p?.nickel_lme))}</td></tr>
+      <tr><td>鉛</td><td>${(+d.lead_lme).toLocaleString()}<br>${fa(avgs.lead_lme,0,true)}</td><td>${fh(chg(d.lead_lme,p?.lead_lme))}</td></tr>
     </table>`)}
     ${sec('pm','貴金屬',`<table class="tbl">
-      <tr><td>🥇 黃金</td><td>${(+d.gold).toLocaleString()}</td><td>${fc(chg(d.gold,p?.gold))}</td></tr>
-      <tr><td>🥈 白銀</td><td>${(+d.silver).toFixed(2)}</td><td>${fc(chg(d.silver,p?.silver))}</td></tr>
-      <tr><td>鉑金</td><td>${(+d.platinum).toLocaleString()}</td><td>${fc(chg(d.platinum,p?.platinum))}</td></tr>
-      <tr><td>鈀金</td><td>${(+d.palladium).toLocaleString()}</td><td>${fc(chg(d.palladium,p?.palladium))}</td></tr>
+      <tr><td>🥇 黃金</td><td>${(+d.gold).toLocaleString()}<br>${fa(avgs.gold,0,true)}</td><td>${fc(chg(d.gold,p?.gold))}</td></tr>
+      <tr><td>🥈 白銀</td><td>${(+d.silver).toFixed(2)}<br>${fa(avgs.silver,2)}</td><td>${fc(chg(d.silver,p?.silver))}</td></tr>
+      <tr><td>鉑金</td><td>${(+d.platinum).toLocaleString()}<br>${fa(avgs.platinum,0,true)}</td><td>${fc(chg(d.platinum,p?.platinum))}</td></tr>
+      <tr><td>鈀金</td><td>${(+d.palladium).toLocaleString()}<br>${fa(avgs.palladium,0,true)}</td><td>${fc(chg(d.palladium,p?.palladium))}</td></tr>
     </table>`)}
     ${sec('en','能源',`<table class="tbl">
-      <tr><td>WTI 原油</td><td>${(+d.wti).toFixed(2)}</td><td>${fh(chg(d.wti,p?.wti))}</td></tr>
-      <tr><td>Brent 原油</td><td>${(+d.brent).toFixed(2)}</td><td>${fh(chg(d.brent,p?.brent))}</td></tr>
+      <tr><td>WTI 原油</td><td>${(+d.wti).toFixed(2)}<br>${fa(avgs.wti,2)}</td><td>${fh(chg(d.wti,p?.wti))}</td></tr>
+      <tr><td>Brent 原油</td><td>${(+d.brent).toFixed(2)}<br>${fa(avgs.brent,2)}</td><td>${fh(chg(d.brent,p?.brent))}</td></tr>
     </table>`)}
     ${sec('sh','航運',`<table class="tbl">
-      <tr><td>BDI 綜合</td><td>${(+d.bdi).toLocaleString()}</td><td>${fh(chg(d.bdi,p?.bdi))}</td></tr>
-      <tr><td>BCI 海岬型</td><td>${(+d.bci).toLocaleString()}</td><td>${fh(chg(d.bci,p?.bci))}</td></tr>
-      <tr><td>BPI 巴拿馬型</td><td>${(+d.bpi).toLocaleString()}</td><td>${fh(chg(d.bpi,p?.bpi))}</td></tr>
-      <tr><td>BSI 超輕便型</td><td>${(+d.bsi).toLocaleString()}</td><td>${fh(chg(d.bsi,p?.bsi))}</td></tr>
+      <tr><td>BDI 綜合</td><td>${(+d.bdi).toLocaleString()}<br>${fa(avgs.bdi,0,true)}</td><td>${fh(chg(d.bdi,p?.bdi))}</td></tr>
+      <tr><td>BCI 海岬型</td><td>${(+d.bci).toLocaleString()}<br>${fa(avgs.bci,0,true)}</td><td>${fh(chg(d.bci,p?.bci))}</td></tr>
+      <tr><td>BPI 巴拿馬型</td><td>${(+d.bpi).toLocaleString()}<br>${fa(avgs.bpi,0,true)}</td><td>${fh(chg(d.bpi,p?.bpi))}</td></tr>
+      <tr><td>BSI 超輕便型</td><td>${(+d.bsi).toLocaleString()}<br>${fa(avgs.bsi,0,true)}</td><td>${fh(chg(d.bsi,p?.bsi))}</td></tr>
     </table>`)}
     ${sec('ore','鐵礦石',`<table class="tbl">
-      <tr><td>58% 鐵礦石</td><td>${(+d.iron_ore_58).toFixed(2)}</td><td>${fh(chg(d.iron_ore_58,p?.iron_ore_58))}</td></tr>
-      <tr><td>62% 鐵礦石</td><td>${(+d.iron_ore_62).toFixed(2)}</td><td>${fh(chg(d.iron_ore_62,p?.iron_ore_62))}</td></tr>
+      <tr><td>58% 鐵礦石</td><td>${(+d.iron_ore_58).toFixed(2)}<br>${fa(avgs.iron_ore_58,2)}</td><td>${fh(chg(d.iron_ore_58,p?.iron_ore_58))}</td></tr>
+      <tr><td>62% 鐵礦石</td><td>${(+d.iron_ore_62).toFixed(2)}<br>${fa(avgs.iron_ore_62,2)}</td><td>${fh(chg(d.iron_ore_62,p?.iron_ore_62))}</td></tr>
     </table>`)}
   `;
 }
 
 function sec(id,title,body){
-  return`<div class="sec"><div class="sec-hdr" onclick="togSec('${id}')"><span class="sec-title">${title}</span><span class="sec-tog" id="${id}-tog">▾</span></div><div id="${id}-body">${body}</div></div>`;
-}
-function togSec(id){
-  const b=document.getElementById(`${id}-body`),t=document.getElementById(`${id}-tog`);
-  if(!b)return; const h=b.style.display==='none';
-  b.style.display=h?'':'none'; t.textContent=h?'▾':'▸';
+  return`<div class="sec">
+    <div class="sec-hdr" onclick="togSec('${id}')">
+      <span class="sec-title">${title}</span>
+      <span class="sec-tog" id="${id}-tog">▾</span>
+    </div>
+    <div id="${id}-body" class="tbl-wrap">${body}</div>
+  </div>`;
 }
 
-// ── 趨勢圖 ──
+function togSec(id){
+  const b=document.getElementById(`${id}-body`);
+  const t=document.getElementById(`${id}-tog`);
+  if(!b)return;
+  const hidden=b.style.display==='none';
+  b.style.display=hidden?'':'none';
+  t.textContent=hidden?'▾':'▸';
+}
+
+/* ── 趨勢圖 ── */
 function showTrend(type,btn){
   document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
@@ -314,32 +729,48 @@ function showTrend(type,btn){
   const ds={
     fx:[{label:'USD/TWD',data:trendData.map(d=>+d.usd_twd),borderColor:'#4f9cf9',tension:.3,pointRadius:2}],
     metal:[
-      {label:'銅(÷10)',data:trendData.map(d=>(+d.copper_lme/10).toFixed(0)),borderColor:'#f87171',tension:.3,pointRadius:2},
+      {label:'銅(÷10)',data:trendData.map(d=>(+d.copper_lme/10).toFixed(0)),borderColor:'#ff6b6b',tension:.3,pointRadius:2},
       {label:'鋁',data:trendData.map(d=>+d.aluminium_lme),borderColor:'#94a3b8',tension:.3,pointRadius:2},
-      {label:'鋅',data:trendData.map(d=>+d.zinc_lme),borderColor:'#4ade80',tension:.3,pointRadius:2},
+      {label:'鋅',data:trendData.map(d=>+d.zinc_lme),borderColor:'#3ed98a',tension:.3,pointRadius:2},
     ],
     energy:[
       {label:'WTI',data:trendData.map(d=>+d.wti),borderColor:'#fb923c',tension:.3,pointRadius:2},
-      {label:'Brent',data:trendData.map(d=>+d.brent),borderColor:'#fbbf24',tension:.3,pointRadius:2,borderDash:[4,3]},
+      {label:'Brent',data:trendData.map(d=>+d.brent),borderColor:'#38bdf8',tension:.3,pointRadius:2,borderDash:[4,3]},
     ],
     bdi:[{label:'BDI',data:trendData.map(d=>+d.bdi),borderColor:'#38bdf8',tension:.3,pointRadius:2,fill:true,backgroundColor:'rgba(56,189,248,.05)'}],
     precious:[
-      {label:'黃金(÷10)',data:trendData.map(d=>(+d.gold/10).toFixed(0)),borderColor:'#fbbf24',tension:.3,pointRadius:2},
+      {label:'黃金(÷100)',data:trendData.map(d=>(+d.gold/100).toFixed(1)),borderColor:'#fbbf24',tension:.3,pointRadius:2},
       {label:'白銀',data:trendData.map(d=>+d.silver),borderColor:'#94a3b8',tension:.3,pointRadius:2},
     ],
   };
   if(trendChart)trendChart.destroy();
   trendChart=new Chart(document.getElementById('trendChart'),{
-    type:'line',data:{labels,datasets:ds[type]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:'#8892a4',font:{size:10},boxWidth:10,padding:8}}},
-      scales:{x:{ticks:{color:'#4a5568',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}},
-              y:{ticks:{color:'#4a5568',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}}}
+    type:'line',
+    data:{labels,datasets:ds[type]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{
+          labels:{color:'#8899bb',font:{size:11},boxWidth:10,padding:10}
+        }
+      },
+      scales:{
+        x:{
+          ticks:{color:'#7a8ba8',font:{size:10},maxRotation:0},
+          grid:{color:'rgba(255,255,255,.06)'},
+          border:{color:'rgba(255,255,255,.08)'}
+        },
+        y:{
+          ticks:{color:'#7a8ba8',font:{size:10}},
+          grid:{color:'rgba(255,255,255,.06)'},
+          border:{color:'rgba(255,255,255,.08)'}
+        }
+      }
     }
   });
 }
 
-// ── RFP ──
+/* ── RFP ── */
 async function loadRFP(){
   try{
     const [cases,summary]=await Promise.all([
@@ -354,22 +785,30 @@ async function loadRFP(){
   }
 }
 
-const ownerColors=['#4f9cf9','#4ade80','#fb923c','#f87171','#a78bfa','#fbbf24'];
+const ownerColors=['#4f9cf9','#3ed98a','#fb923c','#ff6b6b','#a78bfa','#fbbf24'];
 
 function renderRFP(){
   document.getElementById("rfp-load").style.display="none";
   const body=document.getElementById("rfp-body");
   body.style.display="block";
 
-  // 匯整表
   const sumCards=summaryData.map((s,i)=>{
     const active=s.rfp_count>0||s.pending_count>0;
-    return`<div class="scard oc-${i} ${active?'highlight':''}">
+    return`<div class="scard oc-${i}${active?' highlight':''}">
       <div class="scard-name" style="color:${ownerColors[i]||'var(--text)'}">${s.owner}</div>
       <div class="scard-stats">
-        <div class="sstat"><div class="sstat-val" style="color:${ownerColors[i]||'var(--accent)'}">${s.total}</div><div class="sstat-lbl">總件</div></div>
-        <div class="sstat"><div class="sstat-val" style="color:var(--accent)">${s.rfp_count}</div><div class="sstat-lbl">RFP</div></div>
-        <div class="sstat"><div class="sstat-val" style="color:var(--warn)">${s.pending_count}</div><div class="sstat-lbl">暫緩</div></div>
+        <div class="sstat">
+          <div class="sstat-val" style="color:${ownerColors[i]||'var(--accent)'}">${s.total}</div>
+          <div class="sstat-lbl">總件</div>
+        </div>
+        <div class="sstat">
+          <div class="sstat-val" style="color:var(--accent)">${s.rfp_count}</div>
+          <div class="sstat-lbl">RFP</div>
+        </div>
+        <div class="sstat">
+          <div class="sstat-val" style="color:var(--warn)">${s.pending_count}</div>
+          <div class="sstat-lbl">暫緩</div>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -378,10 +817,8 @@ function renderRFP(){
   const rfpTotal=summaryData.reduce((a,s)=>a+s.rfp_count,0);
   const pendTotal=summaryData.reduce((a,s)=>a+s.pending_count,0);
   const over90=rfpData.filter(d=>d.days_elapsed>90).length;
-
   const progDate=rfpData[0]?.progress_date||'—';
 
-  // 篩選選項
   const owners=[...new Set(rfpData.map(d=>d.owner).filter(Boolean))].sort();
   const ownerOpts=owners.map(o=>`<option value="${o}">${o}</option>`).join('');
 
@@ -390,10 +827,25 @@ function renderRFP(){
     <div class="summary-grid">${sumCards}</div>
 
     <div class="subtotal-bar">
-      <div class="sub-item"><div class="sub-val">${total}</div><div class="sub-lbl">總承辦件</div></div>
-      <div class="sub-item"><div class="sub-val">${rfpTotal}</div><div class="sub-lbl">RFP進行中</div></div>
-      <div class="sub-item"><div class="sub-val" style="color:var(--warn)">${pendTotal}</div><div class="sub-lbl">暫緩</div></div>
-      <div class="sub-item"><div class="sub-val" style="color:var(--up)">${over90}</div><div class="sub-lbl">&gt;90天</div></div>
+      <div class="sub-item">
+        <div class="sub-val">${total}</div>
+        <div class="sub-lbl">總承辦件</div>
+      </div>
+      <div class="sub-divider"></div>
+      <div class="sub-item">
+        <div class="sub-val">${rfpTotal}</div>
+        <div class="sub-lbl">RFP 進行中</div>
+      </div>
+      <div class="sub-divider"></div>
+      <div class="sub-item">
+        <div class="sub-val" style="color:var(--warn)">${pendTotal}</div>
+        <div class="sub-lbl">暫緩</div>
+      </div>
+      <div class="sub-divider"></div>
+      <div class="sub-item">
+        <div class="sub-val" style="color:var(--up)">${over90}</div>
+        <div class="sub-lbl">&gt;90 天</div>
+      </div>
     </div>
 
     <div class="list-hdr">
@@ -445,10 +897,10 @@ function renderList(){
     return`<div class="rfp-item">
       <div class="rfp-top">
         <div class="rfp-name">${d.case_name||'—'}</div>
-        <span class="days-badge ${dcls}">${days}天</span>
+        <span class="days-badge ${dcls}">${days} 天</span>
       </div>
       <div class="rfp-meta">
-        <span class="owner-tag" style="color:${ownerColors[oi]};background:${ownerColors[oi]}18;border-color:${ownerColors[oi]}33">${d.owner||'—'}</span>
+        <span class="owner-tag" style="color:${ownerColors[oi]};background:${ownerColors[oi]}18;border:1px solid ${ownerColors[oi]}30">${d.owner||'—'}</span>
         <span class="meta-tag">📋 ${d.case_no||'—'}</span>
         <span class="meta-tag">🏢 ${d.unit||'—'}</span>
         <span class="meta-tag">💰 ${budget}</span>
@@ -483,7 +935,7 @@ function togProg(uid){
 
 function loadMore(){rfpPage++;renderList();}
 
-// ── UI ──
+/* ── UI ── */
 function switchTab(tab,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
