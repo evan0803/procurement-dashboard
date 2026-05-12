@@ -7,43 +7,28 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-/* ════════════════════════════════
-   Design Tokens — Dark Blue
-   ════════════════════════════════ */
 :root{
-  /* Backgrounds */
   --bg:#07090f;
   --bg2:#0d1119;
   --bg3:#111827;
   --bg4:#192032;
-
-  /* Borders */
   --border:rgba(255,255,255,.055);
   --border2:rgba(255,255,255,.11);
   --border3:rgba(255,255,255,.18);
-
-  /* Text */
   --text:#edf0f8;
   --text2:#7a8ba8;
   --text3:#3a4a62;
-
-  /* Brand */
   --accent:#4f9cf9;
   --accent2:#38bdf8;
-
-  /* Semantic */
   --up:#ff6b6b;
   --dn:#3ed98a;
   --warn:#f5a623;
   --gold:#fbbf24;
-
-  /* Radius */
   --r:14px;
   --rs:10px;
   --rx:100px;
 }
 
-/* ── Reset ── */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 
 body{
@@ -59,14 +44,11 @@ body{
 }
 
 .mono{font-family:'DM Mono',monospace}
-
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
-/* ════════════════════════════════
-   Header
-   ════════════════════════════════ */
+/* ── Header ── */
 .hdr{
   position:sticky;top:0;z-index:100;
   background:rgba(7,9,15,.9);
@@ -76,9 +58,7 @@ body{
   padding:11px 18px;
   display:flex;align-items:center;justify-content:space-between;
 }
-
 .hdr-l{display:flex;align-items:center;gap:12px}
-
 .logo-mark{
   width:36px;height:36px;border-radius:10px;
   background:linear-gradient(145deg,rgba(79,156,249,.25),rgba(56,189,248,.15));
@@ -87,7 +67,6 @@ body{
   font-size:18px;flex-shrink:0;
   box-shadow:0 0 18px rgba(79,156,249,.12),inset 0 1px 0 rgba(255,255,255,.08);
 }
-
 .status-indicator{
   display:flex;align-items:center;gap:7px;
   padding:5px 12px 5px 9px;
@@ -98,475 +77,235 @@ body{
 .dot{
   position:relative;width:7px;height:7px;border-radius:50%;
   background:var(--dn);box-shadow:0 0 8px var(--dn);
-  animation:pulse 2.5s ease-in-out infinite;
-  flex-shrink:0;
+  animation:pulse 2.5s ease-in-out infinite;flex-shrink:0;
 }
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.65;transform:scale(.8)}}
-
-/* ★ 放大：10px → 12px */
 .status-txt{font-size:12px;color:var(--dn);font-weight:500;letter-spacing:.04em}
-
-/* ★ 放大：14px → 16px */
 .hdr-title{font-size:16px;font-weight:600;letter-spacing:.01em}
-
-/* ★ 放大：10px → 12px */
 .hdr-sub{font-size:12px;color:var(--text2);margin-top:1px;letter-spacing:.04em}
-
-/* ★ 放大：11px → 13px */
 .refresh-btn{
   background:rgba(79,156,249,.08);
   border:1px solid rgba(79,156,249,.22);
-  color:var(--accent);
-  border-radius:var(--rx);
+  color:var(--accent);border-radius:var(--rx);
   padding:8px 18px;font-size:13px;font-weight:600;
   cursor:pointer;font-family:'Noto Sans TC',sans-serif;
-  transition:all .22s;display:flex;align-items:center;gap:5px;
-  letter-spacing:.04em;
+  transition:all .22s;display:flex;align-items:center;gap:5px;letter-spacing:.04em;
 }
-.refresh-btn:hover{
-  background:rgba(79,156,249,.16);
-  border-color:rgba(79,156,249,.42);
-  box-shadow:0 0 16px rgba(79,156,249,.18);
-}
+.refresh-btn:hover{background:rgba(79,156,249,.16);border-color:rgba(79,156,249,.42);box-shadow:0 0 16px rgba(79,156,249,.18)}
 .refresh-btn:active{transform:scale(.95)}
 .spin{animation:spin .75s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ════════════════════════════════
-   Navigation
-   ════════════════════════════════ */
+/* ── Nav ── */
 .nav{
-  display:flex;
-  background:var(--bg2);
+  display:flex;background:var(--bg2);
   border-bottom:1px solid var(--border);
-  overflow-x:auto;scrollbar-width:none;
-  padding:0 8px;gap:4px;
+  overflow-x:auto;scrollbar-width:none;padding:0 8px;gap:4px;
 }
 .nav::-webkit-scrollbar{display:none}
-
-/* ★ 放大：12px → 14px */
 .nav-btn{
-  flex:1;min-width:90px;
-  padding:14px 10px 13px;
-  font-size:14px;font-weight:500;
-  color:var(--text2);
+  flex:1;min-width:90px;padding:14px 10px 13px;
+  font-size:14px;font-weight:500;color:var(--text2);
   background:none;border:none;cursor:pointer;
   font-family:'Noto Sans TC',sans-serif;
-  border-bottom:2px solid transparent;
-  transition:all .22s;
+  border-bottom:2px solid transparent;transition:all .22s;
   white-space:nowrap;letter-spacing:.02em;
 }
 .nav-btn:hover{color:var(--text)}
-.nav-btn.active{
-  color:var(--accent);
-  border-bottom-color:var(--accent);
-}
+.nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
 
-/* ════════════════════════════════
-   Pages
-   ════════════════════════════════ */
+/* ── Pages ── */
 .page{display:none;padding:16px}
 .page.active{display:block}
 
-/* ════════════════════════════════
-   Loading
-   ════════════════════════════════ */
-.loading{
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;padding:80px 20px;gap:14px;
-}
-.spinner{
-  width:28px;height:28px;
-  border:2px solid var(--border2);
-  border-top-color:var(--accent);
-  border-radius:50%;
-  animation:spin .75s linear infinite;
-}
-
-/* ★ 放大：11px → 13px */
+/* ── Loading ── */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:14px}
+.spinner{width:28px;height:28px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite}
 .loading-txt{font-size:13px;color:var(--text3);letter-spacing:.08em}
 
-/* ════════════════════════════════
-   KPI Cards
-   ════════════════════════════════ */
-.kpi-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;margin-bottom:16px;
-}
-
+/* ── KPI Cards ── */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .kcard{
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  padding:18px 16px;
-  position:relative;overflow:hidden;
-  transition:border-color .25s,box-shadow .25s;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);padding:18px 16px;
+  position:relative;overflow:hidden;transition:border-color .25s,box-shadow .25s;
 }
-.kcard:hover{
-  border-color:var(--border2);
-  box-shadow:0 4px 20px rgba(0,0,0,.25);
-}
-.kcard::before{
-  content:'';position:absolute;
-  top:0;left:0;right:0;height:2px;
-  background:var(--ca,var(--accent));
-  opacity:.85;
-}
-.kcard::after{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 80% 70% at 10% 0%,var(--ca-alpha,rgba(79,156,249,.06)),transparent);
-  pointer-events:none;
-}
-
-/* ★ 放大：9px → 11px */
-.klabel{
-  font-size:11px;color:var(--text3);
-  letter-spacing:.14em;text-transform:uppercase;
-  font-weight:500;margin-bottom:8px;
-}
-
-/* ★ 放大：22px → 26px */
-.kval{
-  font-size:26px;font-weight:400;
-  font-family:'DM Mono',monospace;line-height:1;
-  position:relative;z-index:1;
-}
-
-/* ★ 放大：11px → 13px */
+.kcard:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.kcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ca,var(--accent));opacity:.85}
+.kcard::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 10% 0%,var(--ca-alpha,rgba(79,156,249,.06)),transparent);pointer-events:none}
+.klabel{font-size:11px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;font-weight:500;margin-bottom:8px}
+.kval{font-size:26px;font-weight:400;font-family:'DM Mono',monospace;line-height:1;position:relative;z-index:1}
 .kchg{font-size:13px;margin-top:7px;font-family:'DM Mono',monospace}
-
-/* ★ 放大：11px → 13px */
 .ksub{font-size:13px;color:var(--text2);margin-top:5px;letter-spacing:.02em}
 
-/* ★ 放大：11px → 13px */
-.avg-val{font-size:13px;color:var(--text2);font-family:'DM Mono',monospace}
-
-/* ════════════════════════════════
-   Badges
-   ════════════════════════════════ */
-/* ★ 放大：12px → 13px */
-.badge{
-  display:inline-flex;align-items:center;
-  font-size:13px;padding:3px 10px;border-radius:var(--rx);
-  font-family:'DM Mono',monospace;font-weight:500;
-}
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;font-size:13px;padding:3px 10px;border-radius:var(--rx);font-family:'DM Mono',monospace;font-weight:500}
 .b-up{background:rgba(255,107,107,.12);color:var(--up);border:1px solid rgba(255,107,107,.2)}
 .b-dn{background:rgba(62,217,138,.1);color:var(--dn);border:1px solid rgba(62,217,138,.18)}
 .b-neu{background:rgba(255,255,255,.04);color:var(--text3);border:1px solid var(--border)}
-.b-hot{
-  background:rgba(255,107,107,.18);color:var(--up);
-  border:1px solid rgba(255,107,107,.3);
-  font-weight:700;
-  box-shadow:0 0 10px rgba(255,107,107,.12);
-}
+.b-hot{background:rgba(255,107,107,.18);color:var(--up);border:1px solid rgba(255,107,107,.3);font-weight:700;box-shadow:0 0 10px rgba(255,107,107,.12)}
 .b-warn{background:rgba(245,166,35,.12);color:var(--warn);border:1px solid rgba(245,166,35,.22)}
 
-/* ════════════════════════════════
-   Alert
-   ════════════════════════════════ */
-/* ★ 放大：12px → 14px */
+/* ── Alert ── */
 .alert{
-  background:rgba(245,166,35,.05);
-  border:1px solid rgba(245,166,35,.15);
-  border-left:3px solid var(--warn);
-  border-radius:var(--rs);
-  padding:12px 16px;margin-bottom:16px;
-  font-size:14px;color:var(--text2);line-height:1.7;
+  background:rgba(245,166,35,.05);border:1px solid rgba(245,166,35,.15);
+  border-left:3px solid var(--warn);border-radius:var(--rs);
+  padding:12px 16px;margin-bottom:16px;font-size:14px;color:var(--text2);line-height:1.7;
 }
 .alert b{color:var(--warn)}
 
-/* ════════════════════════════════
-   Date Row
-   ════════════════════════════════ */
+/* ── Date Row ── */
 .date-row{
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:14px;
-  padding:10px 16px;
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:var(--rs);
+  margin-bottom:14px;padding:10px 16px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);
 }
-
-/* ★ 放大：10px → 12px */
 .date-lbl{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.08em}
-
-/* ★ 放大：12px → 14px */
 .date-val{font-size:14px;color:var(--accent2);font-family:'DM Mono',monospace;font-weight:500}
 
-/* ════════════════════════════════
-   Data Sections (collapsible)
-   ════════════════════════════════ */
-.sec{
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  margin-bottom:10px;
-  overflow:hidden;
-}
-.sec-hdr{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:13px 16px;cursor:pointer;user-select:none;
-  transition:background .2s;
-}
+/* ── Sections ── */
+.sec{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;user-select:none;transition:background .2s}
 .sec-hdr:hover{background:rgba(255,255,255,.02)}
-
-/* ★ 放大：11px → 13px */
-.sec-title{
-  font-size:13px;color:var(--text2);
-  letter-spacing:.1em;text-transform:uppercase;font-weight:600;
-}
-
-/* ★ 放大：13px → 15px */
+.sec-title{font-size:13px;color:var(--text2);letter-spacing:.1em;text-transform:uppercase;font-weight:600}
 .sec-tog{font-size:15px;color:var(--text3);line-height:1}
-
 .tbl-wrap{padding:0 4px 8px}
 
 /* ════════════════════════════════
-   Table
+   Table — 4欄版本
+   品項 | Sparkline | 數值+均值 | 偏離度+Badge
    ════════════════════════════════ */
 .tbl{width:100%;border-collapse:collapse}
 .tbl tr{border-top:1px solid var(--border);transition:background .15s}
-.tbl tr:hover{background:rgba(255,255,255,.025)}
+.tbl tr:hover{background:rgba(255,255,255,.022)}
 
-/* ★ 放大：13px → 15px */
-.tbl td{padding:12px 10px;font-size:15px;vertical-align:middle}
-.tbl td:first-child{color:var(--text2);width:44%}
+/* 欄1：品項名稱 */
+.tbl td.c-name{
+  font-size:15px;color:var(--text2);
+  width:22%;padding:12px 8px 12px 12px;
+  vertical-align:middle;
+}
 
-/* ★ 放大：15px → 17px */
-.tbl td:nth-child(2){
+/* 欄2：Sparkline 迷你圖 */
+.tbl td.c-spark{
+  width:28%;padding:8px 10px;
+  vertical-align:middle;
+}
+.spark-wrap{
+  position:relative;height:36px;
+  display:flex;align-items:center;
+}
+.spark-wrap canvas{display:block}
+
+/* 欄3：數值 + 3M均值 */
+.tbl td.c-val{
   font-family:'DM Mono',monospace;
   text-align:right;font-size:17px;font-weight:500;
+  width:24%;padding:12px 8px;vertical-align:middle;
+  line-height:1.3;
 }
-.tbl td:last-child{text-align:right;width:30%}
-
-/* ════════════════════════════════
-   Chart
-   ════════════════════════════════ */
-.chart-card{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:var(--r);padding:16px;margin-bottom:14px;
+.avg-val{
+  display:block;font-size:12px;
+  color:var(--text3);font-family:'DM Mono',monospace;
+  margin-top:3px;
 }
 
-/* ★ 放大：9px → 11px */
-.chart-title{
-  font-size:11px;color:var(--text3);
-  letter-spacing:.14em;text-transform:uppercase;
-  font-weight:600;margin-bottom:14px;
+/* 欄4：均值偏離度 + 漲跌Badge */
+.tbl td.c-info{
+  text-align:right;width:26%;
+  padding:12px 12px 12px 4px;vertical-align:middle;
 }
+.deviation-bar{
+  display:flex;align-items:center;justify-content:flex-end;gap:5px;
+  margin-bottom:5px;
+}
+.dev-label{
+  font-size:11px;font-family:'DM Mono',monospace;
+  color:var(--text3);letter-spacing:.03em;
+}
+/* 採購建議 tag */
+.proc-tag{
+  display:inline-block;
+  font-size:10px;font-weight:600;
+  padding:2px 8px;border-radius:var(--rx);
+  letter-spacing:.04em;margin-bottom:4px;
+  font-family:'Noto Sans TC',sans-serif;
+}
+.pt-buy{background:rgba(62,217,138,.12);color:var(--dn);border:1px solid rgba(62,217,138,.22)}
+.pt-watch{background:rgba(245,166,35,.1);color:var(--warn);border:1px solid rgba(245,166,35,.2)}
+.pt-hold{background:rgba(255,107,107,.1);color:var(--up);border:1px solid rgba(255,107,107,.2)}
+
+/* ── Chart ── */
+.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.chart-title{font-size:11px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin-bottom:14px}
 .chart-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-
-/* ★ 放大：11px → 13px */
 .ctab{
   font-size:13px;padding:6px 15px;border-radius:var(--rx);
-  border:1px solid var(--border2);
-  background:transparent;color:var(--text2);
-  cursor:pointer;font-family:'Noto Sans TC',sans-serif;
-  transition:all .2s;font-weight:500;
+  border:1px solid var(--border2);background:transparent;color:var(--text2);
+  cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all .2s;font-weight:500;
 }
 .ctab:hover{color:var(--text);border-color:var(--border3)}
-.ctab.active{
-  background:var(--accent);border-color:var(--accent);
-  color:#fff;box-shadow:0 0 14px rgba(79,156,249,.3);
-}
+.ctab.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 14px rgba(79,156,249,.3)}
 .chart-wrap{position:relative;height:200px}
 
-/* ════════════════════════════════
-   RFP — Summary Cards
-   ════════════════════════════════ */
-
-/* ★ 放大：9px → 11px */
-.summary-title{
-  font-size:11px;color:var(--text3);
-  letter-spacing:.14em;text-transform:uppercase;
-  font-weight:600;margin-bottom:12px;
-}
+/* ── RFP ── */
+.summary-title{font-size:11px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin-bottom:12px}
 .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-
-.scard{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:var(--rs);padding:14px 13px;
-  position:relative;overflow:hidden;
-  transition:border-color .2s;
-}
+.scard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:14px 13px;position:relative;overflow:hidden;transition:border-color .2s}
 .scard.highlight{border-color:rgba(79,156,249,.2)}
-.scard::before{
-  content:'';position:absolute;top:0;left:0;bottom:0;
-  width:3px;background:var(--sca,var(--bg4));border-radius:2px 0 0 2px;
-}
-
-/* ★ 放大：24px → 24px */
-.scard-name{font-size:24px;font-weight:600;margin-bottom:10px;padding-left:6px}
+.scard::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--sca,var(--bg4));border-radius:2px 0 0 2px}
+.scard-name{font-size:26px;font-weight:600;margin-bottom:10px;padding-left:6px}
 .scard-stats{display:flex;gap:12px;padding-left:6px}
 .sstat{text-align:center}
-
-/* ★ 放大：20px → 22px */
 .sstat-val{font-size:22px;font-weight:500;font-family:'DM Mono',monospace;line-height:1}
-
-/* ★ 放大：9px → 11px */
 .sstat-lbl{font-size:11px;color:var(--text3);margin-top:3px;letter-spacing:.04em}
-
-/* ════════════════════════════════
-   RFP — Subtotal Bar
-   ════════════════════════════════ */
 .subtotal-bar{
   background:linear-gradient(135deg,var(--bg3),var(--bg2));
-  border:1px solid var(--border2);
-  border-radius:var(--rs);
+  border:1px solid var(--border2);border-radius:var(--rs);
   padding:15px 10px;margin-bottom:16px;
-  display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px 1fr;
-  align-items:center;gap:0;
+  display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px 1fr;align-items:center;
 }
 .sub-divider{width:1px;height:28px;background:var(--border);justify-self:center}
 .sub-item{text-align:center;padding:0 4px}
-
-/* ★ 放大：20px → 22px */
-.sub-val{
-  font-size:22px;font-weight:400;
-  font-family:'DM Mono',monospace;color:var(--accent);
-  line-height:1;
-}
-
-/* ★ 放大：9px → 11px */
+.sub-val{font-size:22px;font-weight:400;font-family:'DM Mono',monospace;color:var(--accent);line-height:1}
 .sub-lbl{font-size:11px;color:var(--text3);margin-top:4px;letter-spacing:.04em}
-
-/* ════════════════════════════════
-   RFP — List
-   ════════════════════════════════ */
 .list-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-
-/* ★ 放大：9px → 11px */
 .list-title{font-size:11px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;font-weight:600}
-
 .filter-row{display:flex;gap:8px;margin-bottom:14px}
-
-/* ★ 放大：13px → 15px */
-.search-in{
-  flex:1;background:var(--bg2);
-  border:1px solid var(--border2);
-  color:var(--text);border-radius:var(--rs);
-  padding:11px 15px;font-size:15px;
-  font-family:'Noto Sans TC',sans-serif;
-  outline:none;transition:border-color .2s,box-shadow .2s;
-}
+.search-in{flex:1;background:var(--bg2);border:1px solid var(--border2);color:var(--text);border-radius:var(--rs);padding:11px 15px;font-size:15px;font-family:'Noto Sans TC',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s}
 .search-in::placeholder{color:var(--text3)}
-.search-in:focus{
-  border-color:rgba(79,156,249,.5);
-  box-shadow:0 0 0 3px rgba(79,156,249,.08);
-}
-
-/* ★ 放大：12px → 14px */
-.owner-sel{
-  background:var(--bg2);border:1px solid var(--border2);
-  color:var(--text2);border-radius:var(--rs);
-  padding:11px 14px;font-size:14px;
-  font-family:'Noto Sans TC',sans-serif;outline:none;cursor:pointer;
-}
-
+.search-in:focus{border-color:rgba(79,156,249,.5);box-shadow:0 0 0 3px rgba(79,156,249,.08)}
+.owner-sel{background:var(--bg2);border:1px solid var(--border2);color:var(--text2);border-radius:var(--rs);padding:11px 14px;font-size:14px;font-family:'Noto Sans TC',sans-serif;outline:none;cursor:pointer}
 .rfp-list{display:flex;flex-direction:column;gap:8px}
-
-.rfp-item{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:var(--r);padding:16px 18px;
-  transition:border-color .22s,box-shadow .22s;
-}
-.rfp-item:hover{
-  border-color:var(--border2);
-  box-shadow:0 3px 14px rgba(0,0,0,.2);
-}
-
-.rfp-top{
-  display:flex;align-items:flex-start;
-  justify-content:space-between;gap:10px;margin-bottom:10px;
-}
-
-/* ★ 放大：13px → 15px */
+.rfp-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;transition:border-color .22s,box-shadow .22s}
+.rfp-item:hover{border-color:var(--border2);box-shadow:0 3px 14px rgba(0,0,0,.2)}
+.rfp-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
 .rfp-name{font-size:15px;line-height:1.5;flex:1;font-weight:500}
-
-/* ★ 放大：10px → 12px */
-.days-badge{
-  font-size:12px;font-family:'DM Mono',monospace;
-  padding:4px 12px;border-radius:var(--rx);
-  white-space:nowrap;flex-shrink:0;font-weight:500;
-}
+.days-badge{font-size:12px;font-family:'DM Mono',monospace;padding:4px 12px;border-radius:var(--rx);white-space:nowrap;flex-shrink:0;font-weight:500}
 .d-ok{background:rgba(62,217,138,.08);color:var(--dn);border:1px solid rgba(62,217,138,.18)}
 .d-warn{background:rgba(245,166,35,.1);color:var(--warn);border:1px solid rgba(245,166,35,.2)}
-.d-over{
-  background:rgba(255,107,107,.1);color:var(--up);
-  border:1px solid rgba(255,107,107,.22);
-}
-
+.d-over{background:rgba(255,107,107,.1);color:var(--up);border:1px solid rgba(255,107,107,.22)}
 .rfp-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
-
-/* ★ 放大：10px → 12px */
 .meta-tag{font-size:12px;color:var(--text3)}
-
-/* ★ 放大：10px → 12px */
-.owner-tag{
-  font-size:12px;padding:3px 12px;border-radius:var(--rx);font-weight:500;
-}
-
-.progress-box{
-  background:var(--bg3);
-  border-radius:var(--rs);padding:11px 14px;
-  border:1px solid var(--border);
-  border-left:2px solid var(--border2);
-}
+.owner-tag{font-size:12px;padding:3px 12px;border-radius:var(--rx);font-weight:500}
+.progress-box{background:var(--bg3);border-radius:var(--rs);padding:11px 14px;border:1px solid var(--border);border-left:2px solid var(--border2)}
 .prog-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-
-/* ★ 放大：10px → 12px */
 .prog-date{font-size:12px;color:var(--accent2);font-family:'DM Mono',monospace;font-weight:500}
-
-/* ★ 放大：10px → 12px */
 .prog-target{font-size:12px;color:var(--text3)}
-
-/* ★ 放大：12px → 14px */
 .prog-text{font-size:14px;color:var(--text2);line-height:1.75;white-space:pre-wrap;word-break:break-all}
-
-/* ★ 放大：11px → 13px */
 .prog-toggle{font-size:13px;color:var(--accent);cursor:pointer;margin-top:5px;display:inline-block}
 .prog-full{display:none}
-
-/* ════════════════════════════════
-   Misc
-   ════════════════════════════════ */
-
-/* ★ 放大：13px → 15px */
 .no-data{text-align:center;padding:40px 20px;color:var(--text3);font-size:15px}
-
-/* ★ 放大：13px → 15px */
-.load-more{
-  width:100%;margin-top:10px;padding:14px;
-  background:var(--bg2);border:1px solid var(--border2);
-  color:var(--text2);border-radius:var(--rs);
-  font-size:15px;cursor:pointer;
-  font-family:'Noto Sans TC',sans-serif;transition:all .2s;
-}
+.load-more{width:100%;margin-top:10px;padding:14px;background:var(--bg2);border:1px solid var(--border2);color:var(--text2);border-radius:var(--rs);font-size:15px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all .2s}
 .load-more:hover{background:var(--bg3);color:var(--text);border-color:var(--border3)}
-.load-more:active{transform:scale(.99)}
-
-/* ★ 放大：13px → 15px */
-.err-box{
-  background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);
-  border-radius:var(--r);padding:20px;
-  text-align:center;font-size:15px;color:var(--up);margin:20px 0;
-}
-
-/* ★ 放大：9px → 11px */
-.footer{
-  padding:18px 16px;text-align:center;
-  font-size:11px;color:var(--text3);
-  letter-spacing:.08em;
-  border-top:1px solid var(--border);
-}
-
-/* ── Owner accent colors ── */
+.err-box{background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);border-radius:var(--r);padding:20px;text-align:center;font-size:15px;color:var(--up);margin:20px 0}
+.footer{padding:18px 16px;text-align:center;font-size:11px;color:var(--text3);letter-spacing:.08em;border-top:1px solid var(--border)}
 .oc-0{--sca:#4f9cf9}.oc-1{--sca:#3ed98a}.oc-2{--sca:#fb923c}
 .oc-3{--sca:#ff6b6b}.oc-4{--sca:#a78bfa}.oc-5{--sca:#fbbf24}
 </style>
 </head>
 <body>
 
-<!-- ══ Header ══ -->
 <div class="hdr">
   <div class="hdr-l">
     <div class="logo-mark">📡</div>
@@ -586,14 +325,12 @@ body{
   </div>
 </div>
 
-<!-- ══ Nav ══ -->
 <div class="nav">
   <button class="nav-btn active" onclick="switchTab('market',this)">📈 今日行情</button>
   <button class="nav-btn" onclick="switchTab('chart',this)">📊 趨勢圖</button>
   <button class="nav-btn" onclick="switchTab('rfp',this)">📋 RFP 案件</button>
 </div>
 
-<!-- ══ 今日行情 ══ -->
 <div class="page active" id="page-market">
   <div id="mkt-load" class="loading">
     <div class="spinner"></div>
@@ -602,7 +339,6 @@ body{
   <div id="mkt-body" style="display:none"></div>
 </div>
 
-<!-- ══ 趨勢圖 ══ -->
 <div class="page" id="page-chart">
   <div id="ch-load" class="loading">
     <div class="spinner"></div>
@@ -623,7 +359,6 @@ body{
   </div>
 </div>
 
-<!-- ══ RFP 案件 ══ -->
 <div class="page" id="page-rfp">
   <div id="rfp-load" class="loading">
     <div class="spinner"></div>
@@ -635,12 +370,15 @@ body{
 <div class="footer">資料來源：Supabase &nbsp;·&nbsp; 遠東新世紀採購部 設備組</div>
 
 <script>
-const SURL = "https://idomnpkciupehnpthmgx.supabase.co";
-const SKEY = "sb_publishable_NLXekzegHw_-kYMTgcCnug_KiHV2Gpx";
+const SURL="https://idomnpkciupehnpthmgx.supabase.co";
+const SKEY="sb_publishable_NLXekzegHw_-kYMTgcCnug_KiHV2Gpx";
 
-let mktData=[], trendData=[], rfpData=[], summaryData=[];
-let trendChart=null, rfpFiltered=[], rfpPage=0;
+let mktData=[],trendData=[],rfpData=[],summaryData=[];
+let trendChart=null,rfpFiltered=[],rfpPage=0;
 const PAGE_SIZE=15;
+
+// sparkline chart 實例快取，避免重複 create
+const sparkCharts={};
 
 async function sb(table,params=""){
   const r=await fetch(`${SURL}/rest/v1/${table}${params}`,{
@@ -650,9 +388,9 @@ async function sb(table,params=""){
   return r.json();
 }
 
-async function init(){ await Promise.all([loadMarket(),loadRFP()]); }
+async function init(){await Promise.all([loadMarket(),loadRFP()]);}
 
-/* ── 行情 ── */
+/* ════════════ 行情 ════════════ */
 async function loadMarket(){
   try{
     const d=await sb("market_daily","?order=trade_date.desc&limit=90");
@@ -674,12 +412,9 @@ async function loadMarket(){
   }
 }
 
+/* ── 工具函式 ── */
 function chg(c,p){if(!c||!p||p==0)return null;return((c-p)/Math.abs(p)*100);}
-function fa(v,dec,isInt=false){
-  if(v===null||v===undefined)return'<span class="avg-val">3M —</span>';
-  const s=isInt?Math.round(v).toLocaleString():(+v).toFixed(dec);
-  return`<span class="avg-val">3M avg ${s}</span>`;
-}
+
 function fc(c){
   if(c===null)return'<span class="badge b-neu">—</span>';
   const s=c>0?'+':'';
@@ -695,6 +430,92 @@ function fh(c){
   return`<span class="badge ${cl}">${s}${c.toFixed(2)}%${f}</span>`;
 }
 
+/* 均值偏離度：目前價 vs 3M均值 */
+function devBadge(cur, avg){
+  if(!cur||!avg) return '';
+  const pct=((cur-avg)/avg)*100;
+  const s=pct>0?'+':'';
+  const label=pct>5?'高位觀望':pct<-5?'低位可鎖':'區間整理';
+  const tcls=pct>5?'pt-hold':pct<-5?'pt-buy':'pt-watch';
+  const dcls=pct>0?'b-up':pct<0?'b-dn':'b-neu';
+  return`<div class="deviation-bar">
+    <span class="dev-label">vs均值</span>
+    <span class="badge ${dcls}" style="font-size:11px;padding:2px 8px">${s}${pct.toFixed(1)}%</span>
+  </div>
+  <span class="proc-tag ${tcls}">${label}</span>`;
+}
+
+/* Sparkline：取最近20筆，用 canvas 畫極簡折線 */
+function sparkId(field){return`sp-${field.replace('_','-')}`;}
+
+function drawSpark(canvasId, vals, color){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas||!vals||vals.length<2) return;
+  // 銷毀舊實例
+  if(sparkCharts[canvasId]){sparkCharts[canvasId].destroy();delete sparkCharts[canvasId];}
+  const data=vals.slice(-20).map(v=>+v).filter(v=>!isNaN(v)&&v>0);
+  sparkCharts[canvasId]=new Chart(canvas,{
+    type:'line',
+    data:{
+      labels:data.map((_,i)=>i),
+      datasets:[{
+        data,
+        borderColor:color,
+        borderWidth:1.5,
+        pointRadius:0,
+        tension:.35,
+        fill:true,
+        backgroundColor:(ctx)=>{
+          const g=ctx.chart.ctx.createLinearGradient(0,0,0,36);
+          g.addColorStop(0,color+'28');
+          g.addColorStop(1,color+'00');
+          return g;
+        }
+      }]
+    },
+    options:{
+      responsive:false,
+      animation:false,
+      plugins:{legend:{display:false},tooltip:{enabled:false}},
+      scales:{x:{display:false},y:{display:false}},
+      elements:{line:{borderCapStyle:'round',borderJoinStyle:'round'}}
+    }
+  });
+}
+
+/* 批次繪製所有 sparkline，在 DOM 插入後呼叫 */
+function drawAllSparks(){
+  const sparkDefs=[
+    {id:'sp-usd-twd',   field:'usd_twd',       color:'#4f9cf9'},
+    {id:'sp-eur-twd',   field:'eur_twd',        color:'#38bdf8'},
+    {id:'sp-cny-twd',   field:'cny_twd',        color:'#f97316'},
+    {id:'sp-jpy-twd',   field:'jpy_twd',        color:'#a78bfa'},
+    {id:'sp-copper',    field:'copper_lme',      color:'#ff6b6b'},
+    {id:'sp-aluminium', field:'aluminium_lme',   color:'#94a3b8'},
+    {id:'sp-zinc',      field:'zinc_lme',        color:'#3ed98a'},
+    {id:'sp-tin',       field:'tin_lme',         color:'#fbbf24'},
+    {id:'sp-nickel',    field:'nickel_lme',      color:'#fb923c'},
+    {id:'sp-lead',      field:'lead_lme',        color:'#a3a3a3'},
+    {id:'sp-gold',      field:'gold',            color:'#fbbf24'},
+    {id:'sp-silver',    field:'silver',          color:'#cbd5e1'},
+    {id:'sp-platinum',  field:'platinum',        color:'#e2e8f0'},
+    {id:'sp-palladium', field:'palladium',       color:'#7dd3fc'},
+    {id:'sp-wti',       field:'wti',             color:'#fb923c'},
+    {id:'sp-brent',     field:'brent',           color:'#38bdf8'},
+    {id:'sp-bdi',       field:'bdi',             color:'#38bdf8'},
+    {id:'sp-bci',       field:'bci',             color:'#4f9cf9'},
+    {id:'sp-bpi',       field:'bpi',             color:'#3ed98a'},
+    {id:'sp-bsi',       field:'bsi',             color:'#a78bfa'},
+    {id:'sp-ore58',     field:'iron_ore_58',     color:'#fb7185'},
+    {id:'sp-ore62',     field:'iron_ore_62',     color:'#f43f5e'},
+  ];
+  sparkDefs.forEach(({id,field,color})=>{
+    const vals=trendData.map(r=>r[field]);
+    drawSpark(id,vals,color);
+  });
+}
+
+/* ── 渲染市場 ── */
 function renderMarket(d,p,avgs={}){
   if(!d){document.getElementById("mkt-load").innerHTML='<div class="err-box">暫無資料</div>';return;}
   const alerts=[];
@@ -707,6 +528,106 @@ function renderMarket(d,p,avgs={}){
 
   document.getElementById("mkt-load").style.display="none";
   document.getElementById("mkt-body").style.display="block";
+
+  /* 輔助：產生一列表格 HTML（4欄）
+     name: 顯示名
+     sparkId: canvas id
+     valHtml: 右側數值欄 HTML
+     avgVal: 均值（用於偏離計算）
+     curVal: 當日值
+     badgeFn: fc 或 fh
+     chgVal: 漲跌%（已計算）
+  */
+  function row(name, spId, valHtml, curVal, avgVal, badgeFn, chgVal){
+    return`<tr>
+      <td class="c-name">${name}</td>
+      <td class="c-spark"><div class="spark-wrap"><canvas id="${spId}" width="100" height="36"></canvas></div></td>
+      <td class="c-val">${valHtml}</td>
+      <td class="c-info">
+        ${devBadge(curVal, avgVal)}
+        <div style="margin-top:4px">${badgeFn(chgVal)}</div>
+      </td>
+    </tr>`;
+  }
+
+  const fxRows=
+    row('🇺🇸 美元 USD','sp-usd-twd',
+      `${(+d.usd_twd).toFixed(3)}<span class="avg-val">3M avg ${avgs.usd_twd?.toFixed(3)||'—'}</span>`,
+      +d.usd_twd,avgs.usd_twd,fc,chg(d.usd_twd,p?.usd_twd))+
+    row('🇪🇺 歐元 EUR','sp-eur-twd',
+      `${(+d.eur_twd).toFixed(3)}<span class="avg-val">3M avg ${avgs.eur_twd?.toFixed(3)||'—'}</span>`,
+      +d.eur_twd,avgs.eur_twd,fc,chg(d.eur_twd,p?.eur_twd))+
+    row('🇨🇳 人民幣 CNY','sp-cny-twd',
+      `${(+d.cny_twd).toFixed(4)}<span class="avg-val">3M avg ${avgs.cny_twd?.toFixed(4)||'—'}</span>`,
+      +d.cny_twd,avgs.cny_twd,fc,chg(d.cny_twd,p?.cny_twd))+
+    row('🇯🇵 日元 JPY','sp-jpy-twd',
+      `${(+d.jpy_twd).toFixed(4)}<span class="avg-val">3M avg ${avgs.jpy_twd?.toFixed(4)||'—'}</span>`,
+      +d.jpy_twd,avgs.jpy_twd,fc,chg(d.jpy_twd,p?.jpy_twd));
+
+  const lmeRows=
+    row('🔶 銅','sp-copper',
+      `${(+d.copper_lme).toLocaleString()}<span class="avg-val">3M avg ${avgs.copper_lme?Math.round(avgs.copper_lme).toLocaleString():'—'}</span>`,
+      +d.copper_lme,avgs.copper_lme,fh,chg(d.copper_lme,p?.copper_lme))+
+    row('鋁','sp-aluminium',
+      `${(+d.aluminium_lme).toLocaleString()}<span class="avg-val">3M avg ${avgs.aluminium_lme?Math.round(avgs.aluminium_lme).toLocaleString():'—'}</span>`,
+      +d.aluminium_lme,avgs.aluminium_lme,fh,chg(d.aluminium_lme,p?.aluminium_lme))+
+    row('鋅','sp-zinc',
+      `${(+d.zinc_lme).toLocaleString()}<span class="avg-val">3M avg ${avgs.zinc_lme?Math.round(avgs.zinc_lme).toLocaleString():'—'}</span>`,
+      +d.zinc_lme,avgs.zinc_lme,fh,chg(d.zinc_lme,p?.zinc_lme))+
+    row('錫','sp-tin',
+      `${(+d.tin_lme).toLocaleString()}<span class="avg-val">3M avg ${avgs.tin_lme?Math.round(avgs.tin_lme).toLocaleString():'—'}</span>`,
+      +d.tin_lme,avgs.tin_lme,fh,chg(d.tin_lme,p?.tin_lme))+
+    row('鎳','sp-nickel',
+      `${(+d.nickel_lme).toLocaleString()}<span class="avg-val">3M avg ${avgs.nickel_lme?Math.round(avgs.nickel_lme).toLocaleString():'—'}</span>`,
+      +d.nickel_lme,avgs.nickel_lme,fh,chg(d.nickel_lme,p?.nickel_lme))+
+    row('鉛','sp-lead',
+      `${(+d.lead_lme).toLocaleString()}<span class="avg-val">3M avg ${avgs.lead_lme?Math.round(avgs.lead_lme).toLocaleString():'—'}</span>`,
+      +d.lead_lme,avgs.lead_lme,fh,chg(d.lead_lme,p?.lead_lme));
+
+  const pmRows=
+    row('🥇 黃金','sp-gold',
+      `${(+d.gold).toLocaleString()}<span class="avg-val">3M avg ${avgs.gold?Math.round(avgs.gold).toLocaleString():'—'}</span>`,
+      +d.gold,avgs.gold,fc,chg(d.gold,p?.gold))+
+    row('🥈 白銀','sp-silver',
+      `${(+d.silver).toFixed(2)}<span class="avg-val">3M avg ${avgs.silver?.toFixed(2)||'—'}</span>`,
+      +d.silver,avgs.silver,fc,chg(d.silver,p?.silver))+
+    row('鉑金','sp-platinum',
+      `${(+d.platinum).toLocaleString()}<span class="avg-val">3M avg ${avgs.platinum?Math.round(avgs.platinum).toLocaleString():'—'}</span>`,
+      +d.platinum,avgs.platinum,fc,chg(d.platinum,p?.platinum))+
+    row('鈀金','sp-palladium',
+      `${(+d.palladium).toLocaleString()}<span class="avg-val">3M avg ${avgs.palladium?Math.round(avgs.palladium).toLocaleString():'—'}</span>`,
+      +d.palladium,avgs.palladium,fc,chg(d.palladium,p?.palladium));
+
+  const enRows=
+    row('WTI 原油','sp-wti',
+      `${(+d.wti).toFixed(2)}<span class="avg-val">3M avg ${avgs.wti?.toFixed(2)||'—'}</span>`,
+      +d.wti,avgs.wti,fh,chg(d.wti,p?.wti))+
+    row('Brent 原油','sp-brent',
+      `${(+d.brent).toFixed(2)}<span class="avg-val">3M avg ${avgs.brent?.toFixed(2)||'—'}</span>`,
+      +d.brent,avgs.brent,fh,chg(d.brent,p?.brent));
+
+  const shRows=
+    row('BDI 綜合','sp-bdi',
+      `${(+d.bdi).toLocaleString()}<span class="avg-val">3M avg ${avgs.bdi?Math.round(avgs.bdi).toLocaleString():'—'}</span>`,
+      +d.bdi,avgs.bdi,fh,chg(d.bdi,p?.bdi))+
+    row('BCI 海岬','sp-bci',
+      `${(+d.bci).toLocaleString()}<span class="avg-val">3M avg ${avgs.bci?Math.round(avgs.bci).toLocaleString():'—'}</span>`,
+      +d.bci,avgs.bci,fh,chg(d.bci,p?.bci))+
+    row('BPI 巴拿馬','sp-bpi',
+      `${(+d.bpi).toLocaleString()}<span class="avg-val">3M avg ${avgs.bpi?Math.round(avgs.bpi).toLocaleString():'—'}</span>`,
+      +d.bpi,avgs.bpi,fh,chg(d.bpi,p?.bpi))+
+    row('BSI 超輕便','sp-bsi',
+      `${(+d.bsi).toLocaleString()}<span class="avg-val">3M avg ${avgs.bsi?Math.round(avgs.bsi).toLocaleString():'—'}</span>`,
+      +d.bsi,avgs.bsi,fh,chg(d.bsi,p?.bsi));
+
+  const oreRows=
+    row('58% 鐵礦石','sp-ore58',
+      `${(+d.iron_ore_58).toFixed(2)}<span class="avg-val">3M avg ${avgs.iron_ore_58?.toFixed(2)||'—'}</span>`,
+      +d.iron_ore_58,avgs.iron_ore_58,fh,chg(d.iron_ore_58,p?.iron_ore_58))+
+    row('62% 鐵礦石','sp-ore62',
+      `${(+d.iron_ore_62).toFixed(2)}<span class="avg-val">3M avg ${avgs.iron_ore_62?.toFixed(2)||'—'}</span>`,
+      +d.iron_ore_62,avgs.iron_ore_62,fh,chg(d.iron_ore_62,p?.iron_ore_62));
+
   document.getElementById("mkt-body").innerHTML=`
     <div class="date-row">
       <span class="date-lbl">Last Updated</span>
@@ -739,41 +660,16 @@ function renderMarket(d,p,avgs={}){
         <div class="ksub">航運指數 · 3M avg ${avgs.bdi?Math.round(avgs.bdi).toLocaleString():'—'}</div>
       </div>
     </div>
-    ${sec('fx','匯率',`<table class="tbl">
-      <tr><td>🇺🇸 美元 USD</td><td>${(+d.usd_twd).toFixed(3)}<br>${fa(avgs.usd_twd,3)}</td><td>${fc(chg(d.usd_twd,p?.usd_twd))}</td></tr>
-      <tr><td>🇪🇺 歐元 EUR</td><td>${(+d.eur_twd).toFixed(3)}<br>${fa(avgs.eur_twd,3)}</td><td>${fc(chg(d.eur_twd,p?.eur_twd))}</td></tr>
-      <tr><td>🇨🇳 人民幣 CNY</td><td>${(+d.cny_twd).toFixed(4)}<br>${fa(avgs.cny_twd,4)}</td><td>${fc(chg(d.cny_twd,p?.cny_twd))}</td></tr>
-      <tr><td>🇯🇵 日元 JPY</td><td>${(+d.jpy_twd).toFixed(4)}<br>${fa(avgs.jpy_twd,4)}</td><td>${fc(chg(d.jpy_twd,p?.jpy_twd))}</td></tr>
-    </table>`)}
-    ${sec('lme','LME 基本金屬',`<table class="tbl">
-      <tr><td>🔶 銅</td><td>${(+d.copper_lme).toLocaleString()}<br>${fa(avgs.copper_lme,0,true)}</td><td>${fh(chg(d.copper_lme,p?.copper_lme))}</td></tr>
-      <tr><td>鋁</td><td>${(+d.aluminium_lme).toLocaleString()}<br>${fa(avgs.aluminium_lme,0,true)}</td><td>${fh(chg(d.aluminium_lme,p?.aluminium_lme))}</td></tr>
-      <tr><td>鋅</td><td>${(+d.zinc_lme).toLocaleString()}<br>${fa(avgs.zinc_lme,0,true)}</td><td>${fh(chg(d.zinc_lme,p?.zinc_lme))}</td></tr>
-      <tr><td>錫</td><td>${(+d.tin_lme).toLocaleString()}<br>${fa(avgs.tin_lme,0,true)}</td><td>${fh(chg(d.tin_lme,p?.tin_lme))}</td></tr>
-      <tr><td>鎳</td><td>${(+d.nickel_lme).toLocaleString()}<br>${fa(avgs.nickel_lme,0,true)}</td><td>${fh(chg(d.nickel_lme,p?.nickel_lme))}</td></tr>
-      <tr><td>鉛</td><td>${(+d.lead_lme).toLocaleString()}<br>${fa(avgs.lead_lme,0,true)}</td><td>${fh(chg(d.lead_lme,p?.lead_lme))}</td></tr>
-    </table>`)}
-    ${sec('pm','貴金屬',`<table class="tbl">
-      <tr><td>🥇 黃金</td><td>${(+d.gold).toLocaleString()}<br>${fa(avgs.gold,0,true)}</td><td>${fc(chg(d.gold,p?.gold))}</td></tr>
-      <tr><td>🥈 白銀</td><td>${(+d.silver).toFixed(2)}<br>${fa(avgs.silver,2)}</td><td>${fc(chg(d.silver,p?.silver))}</td></tr>
-      <tr><td>鉑金</td><td>${(+d.platinum).toLocaleString()}<br>${fa(avgs.platinum,0,true)}</td><td>${fc(chg(d.platinum,p?.platinum))}</td></tr>
-      <tr><td>鈀金</td><td>${(+d.palladium).toLocaleString()}<br>${fa(avgs.palladium,0,true)}</td><td>${fc(chg(d.palladium,p?.palladium))}</td></tr>
-    </table>`)}
-    ${sec('en','能源',`<table class="tbl">
-      <tr><td>WTI 原油</td><td>${(+d.wti).toFixed(2)}<br>${fa(avgs.wti,2)}</td><td>${fh(chg(d.wti,p?.wti))}</td></tr>
-      <tr><td>Brent 原油</td><td>${(+d.brent).toFixed(2)}<br>${fa(avgs.brent,2)}</td><td>${fh(chg(d.brent,p?.brent))}</td></tr>
-    </table>`)}
-    ${sec('sh','航運',`<table class="tbl">
-      <tr><td>BDI 綜合</td><td>${(+d.bdi).toLocaleString()}<br>${fa(avgs.bdi,0,true)}</td><td>${fh(chg(d.bdi,p?.bdi))}</td></tr>
-      <tr><td>BCI 海岬型</td><td>${(+d.bci).toLocaleString()}<br>${fa(avgs.bci,0,true)}</td><td>${fh(chg(d.bci,p?.bci))}</td></tr>
-      <tr><td>BPI 巴拿馬型</td><td>${(+d.bpi).toLocaleString()}<br>${fa(avgs.bpi,0,true)}</td><td>${fh(chg(d.bpi,p?.bpi))}</td></tr>
-      <tr><td>BSI 超輕便型</td><td>${(+d.bsi).toLocaleString()}<br>${fa(avgs.bsi,0,true)}</td><td>${fh(chg(d.bsi,p?.bsi))}</td></tr>
-    </table>`)}
-    ${sec('ore','鐵礦石',`<table class="tbl">
-      <tr><td>58% 鐵礦石</td><td>${(+d.iron_ore_58).toFixed(2)}<br>${fa(avgs.iron_ore_58,2)}</td><td>${fh(chg(d.iron_ore_58,p?.iron_ore_58))}</td></tr>
-      <tr><td>62% 鐵礦石</td><td>${(+d.iron_ore_62).toFixed(2)}<br>${fa(avgs.iron_ore_62,2)}</td><td>${fh(chg(d.iron_ore_62,p?.iron_ore_62))}</td></tr>
-    </table>`)}
+    ${sec('fx','匯率',`<table class="tbl">${fxRows}</table>`)}
+    ${sec('lme','LME 基本金屬',`<table class="tbl">${lmeRows}</table>`)}
+    ${sec('pm','貴金屬',`<table class="tbl">${pmRows}</table>`)}
+    ${sec('en','能源',`<table class="tbl">${enRows}</table>`)}
+    ${sec('sh','航運',`<table class="tbl">${shRows}</table>`)}
+    ${sec('ore','鐵礦石',`<table class="tbl">${oreRows}</table>`)}
   `;
+
+  // DOM 插入完成後繪製所有 sparkline
+  requestAnimationFrame(()=>drawAllSparks());
 }
 
 function sec(id,title,body){
@@ -795,7 +691,7 @@ function togSec(id){
   t.textContent=hidden?'▾':'▸';
 }
 
-/* ── 趨勢圖 ── */
+/* ════════════ 趨勢圖 ════════════ */
 function showTrend(type,btn){
   document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
@@ -823,36 +719,23 @@ function showTrend(type,btn){
     data:{labels,datasets:ds[type]},
     options:{
       responsive:true,maintainAspectRatio:false,
-      plugins:{
-        legend:{
-          labels:{color:'#8899bb',font:{size:12},boxWidth:10,padding:10}
-        }
-      },
+      plugins:{legend:{labels:{color:'#8899bb',font:{size:12},boxWidth:10,padding:10}}},
       scales:{
-        x:{
-          ticks:{color:'#7a8ba8',font:{size:11},maxRotation:0},
-          grid:{color:'rgba(255,255,255,.06)'},
-          border:{color:'rgba(255,255,255,.08)'}
-        },
-        y:{
-          ticks:{color:'#7a8ba8',font:{size:11}},
-          grid:{color:'rgba(255,255,255,.06)'},
-          border:{color:'rgba(255,255,255,.08)'}
-        }
+        x:{ticks:{color:'#7a8ba8',font:{size:11},maxRotation:0},grid:{color:'rgba(255,255,255,.06)'},border:{color:'rgba(255,255,255,.08)'}},
+        y:{ticks:{color:'#7a8ba8',font:{size:11}},grid:{color:'rgba(255,255,255,.06)'},border:{color:'rgba(255,255,255,.08)'}}
       }
     }
   });
 }
 
-/* ── RFP ── */
+/* ════════════ RFP ════════════ */
 async function loadRFP(){
   try{
     const [cases,summary]=await Promise.all([
       sb("rfp_cases","?order=days_elapsed.desc&limit=200"),
       sb("rfp_summary","?order=total.desc")
     ]);
-    rfpData=cases; summaryData=summary;
-    rfpFiltered=cases;
+    rfpData=cases;summaryData=summary;rfpFiltered=cases;
     renderRFP();
   }catch(e){
     document.getElementById("rfp-load").innerHTML=`<div class="err-box">⚠ 無法載入案件資料<br><small>${e.message}</small></div>`;
@@ -865,76 +748,44 @@ function renderRFP(){
   document.getElementById("rfp-load").style.display="none";
   const body=document.getElementById("rfp-body");
   body.style.display="block";
-
   const sumCards=summaryData.map((s,i)=>{
     const active=s.rfp_count>0||s.pending_count>0;
     return`<div class="scard oc-${i}${active?' highlight':''}">
       <div class="scard-name" style="color:${ownerColors[i]||'var(--text)'}">${s.owner}</div>
       <div class="scard-stats">
-        <div class="sstat">
-          <div class="sstat-val" style="color:${ownerColors[i]||'var(--accent)'}">${s.total}</div>
-          <div class="sstat-lbl">總件</div>
-        </div>
-        <div class="sstat">
-          <div class="sstat-val" style="color:var(--accent)">${s.rfp_count}</div>
-          <div class="sstat-lbl">RFP</div>
-        </div>
-        <div class="sstat">
-          <div class="sstat-val" style="color:var(--warn)">${s.pending_count}</div>
-          <div class="sstat-lbl">暫緩</div>
-        </div>
+        <div class="sstat"><div class="sstat-val" style="color:${ownerColors[i]||'var(--accent)'}">${s.total}</div><div class="sstat-lbl">總件</div></div>
+        <div class="sstat"><div class="sstat-val" style="color:var(--accent)">${s.rfp_count}</div><div class="sstat-lbl">RFP</div></div>
+        <div class="sstat"><div class="sstat-val" style="color:var(--warn)">${s.pending_count}</div><div class="sstat-lbl">暫緩</div></div>
       </div>
     </div>`;
   }).join('');
-
   const total=summaryData.reduce((a,s)=>a+s.total,0);
   const rfpTotal=summaryData.reduce((a,s)=>a+s.rfp_count,0);
   const pendTotal=summaryData.reduce((a,s)=>a+s.pending_count,0);
   const over90=rfpData.filter(d=>d.days_elapsed>90).length;
   const progDate=rfpData[0]?.progress_date||'—';
-
   const owners=[...new Set(rfpData.map(d=>d.owner).filter(Boolean))].sort();
   const ownerOpts=owners.map(o=>`<option value="${o}">${o}</option>`).join('');
-
   body.innerHTML=`
     <div class="summary-title">承辦人匯整 — ${progDate} 更新</div>
     <div class="summary-grid">${sumCards}</div>
-
     <div class="subtotal-bar">
-      <div class="sub-item">
-        <div class="sub-val">${total}</div>
-        <div class="sub-lbl">總承辦件</div>
-      </div>
+      <div class="sub-item"><div class="sub-val">${total}</div><div class="sub-lbl">總承辦件</div></div>
       <div class="sub-divider"></div>
-      <div class="sub-item">
-        <div class="sub-val">${rfpTotal}</div>
-        <div class="sub-lbl">RFP 進行中</div>
-      </div>
+      <div class="sub-item"><div class="sub-val">${rfpTotal}</div><div class="sub-lbl">RFP 進行中</div></div>
       <div class="sub-divider"></div>
-      <div class="sub-item">
-        <div class="sub-val" style="color:var(--warn)">${pendTotal}</div>
-        <div class="sub-lbl">暫緩</div>
-      </div>
+      <div class="sub-item"><div class="sub-val" style="color:var(--warn)">${pendTotal}</div><div class="sub-lbl">暫緩</div></div>
       <div class="sub-divider"></div>
-      <div class="sub-item">
-        <div class="sub-val" style="color:var(--up)">${over90}</div>
-        <div class="sub-lbl">&gt;90 天</div>
-      </div>
+      <div class="sub-item"><div class="sub-val" style="color:var(--up)">${over90}</div><div class="sub-lbl">&gt;90 天</div></div>
     </div>
-
-    <div class="list-hdr">
-      <span class="list-title">承辦中案件（${rfpData.length} 筆）</span>
-    </div>
+    <div class="list-hdr"><span class="list-title">承辦中案件（${rfpData.length} 筆）</span></div>
     <div class="filter-row">
       <input class="search-in" id="rfp-q" placeholder="搜尋案件名稱或單號..." oninput="filterRFP()">
-      <select class="owner-sel" id="rfp-ow" onchange="filterRFP()">
-        <option value="">全部</option>${ownerOpts}
-      </select>
+      <select class="owner-sel" id="rfp-ow" onchange="filterRFP()"><option value="">全部</option>${ownerOpts}</select>
     </div>
     <div id="rfp-list" class="rfp-list"></div>
   `;
-  rfpPage=0;
-  renderList();
+  rfpPage=0;renderList();
 }
 
 function filterRFP(){
@@ -945,7 +796,7 @@ function filterRFP(){
     const mo=!ow||d.owner===ow;
     return mq&&mo;
   });
-  rfpPage=0; renderList();
+  rfpPage=0;renderList();
 }
 
 function renderList(){
@@ -953,10 +804,8 @@ function renderList(){
   if(!list)return;
   const slice=rfpFiltered.slice(0,(rfpPage+1)*PAGE_SIZE);
   if(slice.length===0){list.innerHTML='<div class="no-data">找不到符合的案件</div>';return;}
-
   const ownerIdx={};
   summaryData.forEach((s,i)=>ownerIdx[s.owner]=i);
-
   const items=slice.map((d,idx)=>{
     const days=d.days_elapsed||0;
     const dcls=days>90?'d-over':days>60?'d-warn':'d-ok';
@@ -967,7 +816,6 @@ function renderList(){
     const shortProg=prog.length>60?prog.slice(0,60)+'...':prog;
     const hasMore=prog.length>60;
     const uid=`p${idx}`;
-
     return`<div class="rfp-item">
       <div class="rfp-top">
         <div class="rfp-name">${d.case_name||'—'}</div>
@@ -990,9 +838,8 @@ function renderList(){
       </div>`:''}
     </div>`;
   }).join('');
-
-  const hasMore=rfpFiltered.length>slice.length;
-  const moreBtn=hasMore?`<button class="load-more" onclick="loadMore()">載入更多（剩 ${rfpFiltered.length-slice.length} 筆）</button>`:'';
+  const hasMore2=rfpFiltered.length>slice.length;
+  const moreBtn=hasMore2?`<button class="load-more" onclick="loadMore()">載入更多（剩 ${rfpFiltered.length-slice.length} 筆）</button>`:'';
   list.innerHTML=items+moreBtn;
 }
 
@@ -1009,13 +856,13 @@ function togProg(uid){
 
 function loadMore(){rfpPage++;renderList();}
 
-/* ── UI ── */
+/* ════════════ UI ════════════ */
 function switchTab(tab,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById(`page-${tab}`).classList.add('active');
   btn.classList.add('active');
-  if(tab==='chart'&&trendData.length>0) setTimeout(()=>showTrend('fx'),100);
+  if(tab==='chart'&&trendData.length>0)setTimeout(()=>showTrend('fx'),100);
 }
 
 async function refreshAll(){
@@ -1025,6 +872,9 @@ async function refreshAll(){
   document.getElementById("mkt-body").style.display="none";
   document.getElementById("rfp-load").style.display="flex";
   document.getElementById("rfp-body").style.display="none";
+  // 銷毀所有 sparkline 實例
+  Object.values(sparkCharts).forEach(c=>c.destroy());
+  Object.keys(sparkCharts).forEach(k=>delete sparkCharts[k]);
   await Promise.all([loadMarket(),loadRFP()]);
   icon.classList.remove('spin');
 }
