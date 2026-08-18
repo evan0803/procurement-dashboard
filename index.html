@@ -347,6 +347,14 @@ body{
 .pb-vlo{background:rgba(52,211,153,.15); color:var(--dn); border:1px solid rgba(52,211,153,.32)}
 .pb-na {background:rgba(255,255,255,.04);color:var(--text3);border:1px solid var(--border)}
 .dev-sub{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);text-align:right;margin-top:2px}
+/* 窄螢幕：位階標籤字級縮一級，避免「極高檔 100%」把表格撐寬 */
+@media(max-width:420px){
+  .dev-label{font-size:9.5px}
+  .deviation-bar{gap:4px}
+  .deviation-bar .badge{font-size:10px!important;padding:2px 6px!important}
+  .proc-tag{font-size:9px;padding:2px 6px;letter-spacing:.03em}
+  .dev-sub{font-size:9px}
+}
 
 /* ─── 資料品質警告 ─── */
 .qbad{
