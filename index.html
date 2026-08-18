@@ -339,6 +339,120 @@ body{
 .pt-watch{background:rgba(251,191,36,.09);color:var(--warn);border:1px solid rgba(251,191,36,.2)}
 .pt-hold{background:rgba(248,113,113,.1);color:var(--up);border:1px solid rgba(248,113,113,.2)}
 
+/* ─── 判讀層：位階分級配色（紅=買方不利，綠=買方有利）─── */
+.pb-vhi{background:rgba(248,113,113,.14);color:var(--up);border:1px solid rgba(248,113,113,.3)}
+.pb-hi {background:rgba(251,146,60,.11); color:#fb923c; border:1px solid rgba(251,146,60,.24)}
+.pb-mid{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid var(--border2)}
+.pb-lo {background:rgba(52,211,153,.1);  color:var(--dn); border:1px solid rgba(52,211,153,.2)}
+.pb-vlo{background:rgba(52,211,153,.15); color:var(--dn); border:1px solid rgba(52,211,153,.32)}
+.pb-na {background:rgba(255,255,255,.04);color:var(--text3);border:1px solid var(--border)}
+.dev-sub{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);text-align:right;margin-top:2px}
+
+/* ─── 資料品質警告 ─── */
+.qbad{
+  background:rgba(248,113,113,.06);
+  border:1px solid rgba(248,113,113,.2);
+  border-left:3px solid var(--up);
+  border-radius:var(--rs);
+  padding:12px 16px;margin-bottom:14px;
+  font-size:13px;color:#fca5a5;line-height:1.75;
+}
+.qbad b{color:var(--up)}
+
+/* ─── 今日判讀 ─── */
+.brief{
+  background:linear-gradient(180deg,rgba(79,156,249,.06),rgba(79,156,249,.015));
+  border:1px solid rgba(79,156,249,.18);
+  border-radius:var(--r);
+  padding:16px 18px;margin-bottom:14px;
+}
+.brief-hd{
+  display:flex;align-items:center;gap:7px;
+  font-size:12px;font-weight:700;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:10px;
+}
+.brief-ico{font-size:14px}
+.brief-date{
+  margin-left:auto;font-family:'DM Mono',monospace;
+  font-size:11px;color:var(--text3);letter-spacing:.02em;font-weight:400;
+}
+.brief-head{font-size:15px;line-height:1.85;color:var(--text);font-weight:500}
+.brief-moves{
+  margin-top:11px;padding-top:11px;
+  border-top:1px solid rgba(255,255,255,.07);
+  font-size:12.5px;line-height:1.8;color:var(--text2);
+}
+.brief-moves b{color:var(--warn);font-weight:600}
+
+/* ─── 核心指標卡 ─── */
+.core-grid{display:grid;grid-template-columns:1fr;gap:11px;margin-bottom:16px}
+@media(min-width:640px){.core-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:1100px){.core-grid{grid-template-columns:1fr 1fr 1fr}}
+.ccard{
+  background:var(--bg2);border:1px solid var(--border);
+  border-left:3px solid var(--border3);
+  border-radius:var(--rs);padding:13px 15px;
+}
+.ccard.pb-vhi{border-left-color:var(--up);background:var(--bg2)}
+.ccard.pb-hi {border-left-color:#fb923c;background:var(--bg2)}
+.ccard.pb-mid{border-left-color:var(--text3);background:var(--bg2)}
+.ccard.pb-lo,.ccard.pb-vlo{border-left-color:var(--dn);background:var(--bg2)}
+.cc-top{display:flex;align-items:baseline;gap:7px;margin-bottom:6px}
+.cc-dot{font-size:11px}
+.cc-name{font-size:13.5px;font-weight:600;color:var(--text)}
+.cc-val{margin-left:auto;font-size:17px;font-weight:600;color:var(--text)}
+.cc-unit{font-size:10px;color:var(--text3);font-weight:400}
+.cc-pct{font-size:12px;color:var(--text2);margin-bottom:7px}
+.cc-pct b{color:var(--text);font-family:'DM Mono',monospace}
+
+/* 位階條 */
+.posbar{
+  position:relative;height:5px;border-radius:var(--rx);
+  background:rgba(255,255,255,.06);overflow:visible;margin-bottom:3px;
+}
+.posbar-fill{height:100%;border-radius:var(--rx);opacity:.7}
+/* 位階條用實色，不沿用徽章的淡色底（那個透明度太低會看不見） */
+.posbar-fill.pb-vhi{background:var(--up);border:none}
+.posbar-fill.pb-hi {background:#fb923c;border:none}
+.posbar-fill.pb-mid{background:var(--text2);border:none}
+.posbar-fill.pb-lo {background:var(--dn);border:none}
+.posbar-fill.pb-vlo{background:var(--dn);border:none}
+.posbar-fill.pb-na {background:var(--text3);border:none}
+.posbar-mark{
+  position:absolute;top:-2.5px;width:2px;height:10px;
+  background:var(--text);border-radius:1px;transform:translateX(-1px);
+}
+.posbar-ends{
+  display:flex;justify-content:space-between;
+  font-size:9.5px;font-family:'DM Mono',monospace;
+  color:var(--text3);margin-bottom:9px;
+}
+.posbar-ends span:nth-child(2){font-family:'Noto Sans TC',sans-serif;letter-spacing:.04em}
+
+.cc-scales{
+  display:flex;flex-wrap:wrap;gap:4px 12px;
+  font-size:11px;color:var(--text3);margin-bottom:8px;
+}
+.cc-scales i{font-style:normal;font-family:'DM Mono',monospace;padding:0 3px;border-radius:3px}
+.cc-scales i.b-up{color:var(--up);background:none;border:none}
+.cc-scales i.b-dn{color:var(--dn);background:none;border:none}
+.cc-scales i.b-neu{color:var(--text3);background:none;border:none}
+.cc-use{font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:7px}
+.cc-judge{font-size:12px;line-height:1.75;color:var(--text2)}
+.cc-mom{
+  margin-top:7px;font-size:11.5px;line-height:1.7;
+  color:var(--warn);opacity:.85;
+}
+.jtag{
+  display:inline-block;font-size:10px;font-weight:700;
+  padding:2px 7px;border-radius:var(--rx);margin-right:6px;
+  letter-spacing:.05em;vertical-align:1px;
+}
+.jt-bad {background:rgba(248,113,113,.14);color:var(--up); border:1px solid rgba(248,113,113,.3)}
+.jt-warn{background:rgba(251,191,36,.11); color:var(--warn);border:1px solid rgba(251,191,36,.24)}
+.jt-good{background:rgba(52,211,153,.12); color:var(--dn); border:1px solid rgba(52,211,153,.26)}
+.jt-neu {background:rgba(255,255,255,.05);color:var(--text2);border:1px solid var(--border2)}
+
 /* ─── Chart ─── */
 .chart-card{
   background:var(--bg2);border:1px solid var(--border);
@@ -581,6 +695,7 @@ const SURL="https://idomnpkciupehnpthmgx.supabase.co";
 const SKEY="sb_publishable_NLXekzegHw_-kYMTgcCnug_KiHV2Gpx";
 
 let mktData=[],trendData=[],rfpData=[],summaryData=[];
+let briefing=null,indMeta={};
 let trendChart=null,rfpFiltered=[],rfpPage=0;
 const PAGE_SIZE=15;
 
@@ -601,6 +716,15 @@ async function loadMarket(){
   try{
     const d=await sb("market_daily","?order=trade_date.desc&limit=90");
     mktData=d; trendData=[...d].reverse();
+    /* 判讀層：近一年位階、多尺度變化、品質旗標（由 Supabase fn_generate_briefing 產生） */
+    try{
+      const [bf,mt]=await Promise.all([
+        sb("market_briefings","?select=trade_date,headline,metrics,flags,quality_ok&order=trade_date.desc&limit=1"),
+        sb("market_indicator_meta","?select=indicator,display_name,unit,is_core,sort_order,purpose&order=sort_order")
+      ]);
+      briefing = (bf && bf.length) ? bf[0] : null;
+      indMeta = {}; (mt||[]).forEach(m=>indMeta[m.indicator]=m);
+    }catch(e){ briefing=null; indMeta={}; }
     const fields=['usd_twd','eur_twd','cny_twd','jpy_twd',
       'copper_lme','aluminium_lme','zinc_lme','tin_lme','nickel_lme','lead_lme',
       'gold','silver','platinum','palladium',
@@ -647,6 +771,150 @@ function devBadge(cur, avg){
     <span class="badge ${dcls}" style="font-size:11px;padding:2px 8px">${s}${pct.toFixed(1)}%</span>
   </div>
   <span class="proc-tag ${tcls}">${label}</span>`;
+}
+
+/* ════════════ 判讀層 ════════════ */
+function met(ind){ return briefing && briefing.metrics ? briefing.metrics[ind] : null; }
+function nm(ind){ return (indMeta[ind]&&indMeta[ind].display_name)||ind; }
+
+/* 近一年位階分級 */
+function posBand(p){
+  if(p==null) return {label:'—',cls:'pb-na',dot:''};
+  if(p>=90) return {label:'極高檔',cls:'pb-vhi',dot:'🔴'};
+  if(p>=75) return {label:'偏高',  cls:'pb-hi', dot:'🟠'};
+  if(p>=25) return {label:'中性',  cls:'pb-mid',dot:'⚪'};
+  if(p>=10) return {label:'偏低',  cls:'pb-lo', dot:'🟢'};
+  return              {label:'極低檔',cls:'pb-vlo',dot:'🟩'};
+}
+
+/* 位階 × 近一月趨勢 → 採購動作建議 */
+function judgeText(m){
+  if(!m||m.pctile==null) return null;
+  const p=+m.pctile, mo=+(m.m1||0);
+  const up=mo>1, dn=mo<-1;
+  if(p>=90){
+    if(up) return {tag:'最不利',cls:'jt-bad', text:'已在極高檔且仍在上行。避免此時簽長約鎖價；報價有效期壓到最短，或談原物料連動條款把風險還給市場。若案件可延，延。'};
+    if(dn) return {tag:'高檔回落',cls:'jt-warn',text:'仍在極高檔但已開始回落。先不要急著鎖價，觀察下行是否確立；若時程壓不住，改簽短約或分批下單。'};
+    return   {tag:'高檔盤整',cls:'jt-warn',text:'極高檔橫盤。廠商漲價要求有客觀依據，但你也可據此要求縮短報價有效期，而非接受長約高價。'};
+  }
+  if(p>=75) return {tag:'偏高',cls:'jt-warn',text:'位階偏高，尚未極端。談判時可要求以近期均價而非當日高點為計價基準。'};
+  if(p<=10){
+    if(dn) return {tag:'最有利',cls:'jt-good',text:'在極低檔且仍在下行。廠商若沿用舊成本基準報價，這是要求重新核價的硬依據；若想再等，可分批鎖價避免抓不到底。'};
+    if(up) return {tag:'低檔回升',cls:'jt-good',text:'仍在低檔但已開始反彈。鎖價窗口可能正在關閉，若有確定需求建議儘速定案。'};
+    return   {tag:'低檔盤整',cls:'jt-good',text:'低檔橫盤，是簽長約鎖價的相對好時機。'};
+  }
+  if(p<=25) return {tag:'偏低',cls:'jt-good',text:'位階偏低，議價立場相對有利，可要求重新核價。'};
+  return {tag:'中性',cls:'jt-neu',text:'位階中性，無明顯方向，依案件時程決定即可，不需為行情調整節奏。'};
+}
+
+/* 位階看不出來、但值得講的動能 */
+function momentumText(m){
+  if(!m) return null;
+  const out=[];
+  const mo=m.m1==null?null:+m.m1, y=m.ytd==null?null:+m.ytd;
+  if(mo!==null&&Math.abs(mo)>=5) out.push(`近一個月${mo>0?'上漲':'下跌'} ${Math.abs(mo).toFixed(1)}%`);
+  if(y!==null&&Math.abs(y)>=25)
+    out.push(`今年以來累計${y>0?'上漲':'下跌'} ${Math.abs(y).toFixed(1)}%，成本基準已明顯${y>0?'高於':'低於'}年初${y>0?'，比對去年案件報價要注意基期差異':'，舊案成本基準已不適用'}`);
+  return out.length?out.join('；'):null;
+}
+
+function pctTxt(v,dg){ if(v==null) return '—'; const n=+v; const s=n>0?'▲':n<0?'▼':'─'; return `${s}${Math.abs(n).toFixed(dg==null?1:dg)}%`; }
+function pctCls(v){ if(v==null) return 'b-neu'; return +v>0?'b-up':+v<0?'b-dn':'b-neu'; }
+
+/* 位階條：在近一年區間中的相對位置 */
+function posBar(m){
+  if(!m||m.pctile==null) return '';
+  const p=Math.max(0,Math.min(100,+m.pctile));
+  const b=posBand(p);
+  return `<div class="posbar"><div class="posbar-fill ${b.cls}" style="width:${p}%"></div>
+    <div class="posbar-mark" style="left:${p}%"></div></div>
+    <div class="posbar-ends"><span>${fmtNum(m.lo)}</span><span>近一年區間</span><span>${fmtNum(m.hi)}</span></div>`;
+}
+function fmtNum(v){
+  if(v==null) return '—';
+  const n=+v;
+  if(Math.abs(n)>=1000) return Math.round(n).toLocaleString();
+  if(Math.abs(n)>=10) return n.toFixed(2);
+  return n.toFixed(4).replace(/0+$/,'').replace(/\.$/,'');
+}
+
+/* 今日判讀區塊 */
+function renderBriefing(){
+  if(!briefing) return '';
+  const f=briefing.flags||{}, q=f.quality||[], mv=f.moves||[];
+  let html='';
+
+  if(q.length){
+    html+=`<div class="qbad">🚨 <b>資料品質警告</b>：`
+      + q.map(x=>`${x.name} 單次變動 ${(+x.change_pct).toFixed(1)}%，超出合理範圍`).join('、')
+      + `。這幾項已排除於判讀之外，請回 Excel 核對。</div>`;
+  }
+
+  html+=`<div class="brief">
+    <div class="brief-hd"><span class="brief-ico">📌</span> 今日判讀
+      <span class="brief-date">${briefing.trade_date}</span></div>
+    <div class="brief-head">${briefing.headline||''}</div>`;
+
+  if(mv.length){
+    html+=`<div class="brief-moves"><b>本期顯著異動</b>（相對各品項自身波動，非固定百分比門檻）：`
+      + mv.map(x=>`${x.name} ${(+x.change_pct).toFixed(2)}%（${Math.abs(+x.sigma).toFixed(1)}σ，平常僅 ±${(+x.typ_move).toFixed(2)}%）`).join('、')
+      + `</div>`;
+  }
+  html+=`</div>`;
+
+  const cores=Object.keys(indMeta).filter(k=>indMeta[k].is_core)
+    .sort((a,b)=>indMeta[a].sort_order-indMeta[b].sort_order);
+  if(cores.length){
+    html+=`<div class="core-grid">`;
+    cores.forEach(k=>{
+      const m=met(k); if(!m) return;
+      const b=posBand(m.pctile==null?null:+m.pctile);
+      const j=judgeText(m), mo=momentumText(m);
+      const u=indMeta[k].unit?` <span class="cc-unit">${indMeta[k].unit}</span>`:'';
+      html+=`<div class="ccard ${b.cls}">
+        <div class="cc-top"><span class="cc-dot">${b.dot}</span><span class="cc-name">${nm(k)}</span>
+          <span class="cc-val mono">${fmtNum(m.value)}${u}</span></div>
+        <div class="cc-pct"><b>第 ${m.pctile==null?'—':(+m.pctile).toFixed(0)} 百分位</b> · ${b.label}</div>
+        ${posBar(m)}
+        <div class="cc-scales">
+          <span>較前次 <i class="${pctCls(m.d1)}">${pctTxt(m.d1,2)}</i></span>
+          <span>近1週 <i class="${pctCls(m.w1)}">${pctTxt(m.w1)}</i></span>
+          <span>近1月 <i class="${pctCls(m.m1)}">${pctTxt(m.m1)}</i></span>
+          <span>今年 <i class="${pctCls(m.ytd)}">${pctTxt(m.ytd)}</i></span>
+        </div>
+        ${indMeta[k].purpose?`<div class="cc-use">${indMeta[k].purpose}</div>`:''}
+        ${j?`<div class="cc-judge"><span class="jtag ${j.cls}">${j.tag}</span>${j.text}</div>`:''}
+        ${mo?`<div class="cc-mom">📈 ${mo}</div>`:''}
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+  return html;
+}
+
+/* spark canvas id → Supabase 指標欄名（讓表格列不必改呼叫方式就能取得位階） */
+const SPARK2IND={
+  'sp-usd-twd':'usd_twd','sp-eur-twd':'eur_twd','sp-cny-twd':'cny_twd','sp-jpy-twd':'jpy_twd',
+  'sp-copper':'copper_lme','sp-aluminium':'aluminium_lme','sp-zinc':'zinc_lme',
+  'sp-tin':'tin_lme','sp-nickel':'nickel_lme','sp-lead':'lead_lme',
+  'sp-gold':'gold','sp-silver':'silver','sp-platinum':'platinum','sp-palladium':'palladium',
+  'sp-wti':'wti','sp-brent':'brent',
+  'sp-bdi':'bdi','sp-bci':'bci','sp-bpi':'bpi','sp-bsi':'bsi',
+  'sp-ore58':'iron_ore_58','sp-ore62':'iron_ore_62'
+};
+
+/* 表格內的位階標記（取代原本的 vs 3M均值標籤） */
+function posBadge(ind, cur, avg){
+  const m=met(ind);
+  if(!m||m.pctile==null) return devBadge(cur,avg);
+  const p=+m.pctile, b=posBand(p);
+  const dev=(cur&&avg)?((cur-avg)/avg*100):null;
+  return`<div class="deviation-bar">
+    <span class="dev-label">近一年位階</span>
+    <span class="badge ${b.cls}" style="font-size:11px;padding:2px 8px">${p.toFixed(0)}%</span>
+  </div>
+  <span class="proc-tag ${b.cls}">${b.label}</span>
+  ${dev!==null?`<div class="dev-sub">vs 3M均值 ${dev>0?'+':''}${dev.toFixed(1)}%</div>`:''}`;
 }
 
 function sparkId(field){return`sp-${field.replace('_','-')}`;}
@@ -735,7 +1003,7 @@ function renderMarket(d,p,avgs={}){
       <td class="c-spark"><div class="spark-wrap"><canvas id="${spId}" width="100" height="36"></canvas></div></td>
       <td class="c-val">${valHtml}</td>
       <td class="c-info">
-        ${devBadge(curVal, avgVal)}
+        ${posBadge(SPARK2IND[spId], curVal, avgVal)}
         <div style="margin-top:4px">${badgeFn(chgVal)}</div>
       </td>
     </tr>`;
@@ -824,7 +1092,8 @@ function renderMarket(d,p,avgs={}){
       <span class="date-lbl">Last Updated</span>
       <span class="date-val">${d.trade_date}</span>
     </div>
-    ${alerts.length?`<div class="alert">⚠ 重大波動：${alerts.join('、')}</div>`:''}
+    ${briefing ? renderBriefing()
+               : (alerts.length?`<div class="alert">⚠ 重大波動：${alerts.join('、')}</div>`:'')}
     <div class="kpi-grid">
       <div class="kcard" style="--ca:#4f9cf9;--ca-alpha:rgba(79,156,249,.08)">
         <div class="klabel">USD / TWD</div>
