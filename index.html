@@ -491,6 +491,18 @@ body{
 }
 .chart-wrap{position:relative;height:210px}
 
+
+/* ─── 碳酸鋰 ─── */
+.li-src{font-size:12px;color:var(--text3);margin:-6px 0 14px;line-height:1.6}
+.li-tbl{width:100%;border-collapse:collapse;font-family:'DM Mono',monospace;font-size:13px}
+.li-tbl th{font-family:'Noto Sans TC',sans-serif;font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.08em;text-align:right;padding:9px 10px;position:sticky;top:0;background:var(--bg2)}
+.li-tbl td{text-align:right;padding:9px 10px;border-top:1px solid var(--border);color:var(--text)}
+.li-tbl th:first-child,.li-tbl td:first-child{text-align:left;padding-left:14px}
+.li-tbl td.li-l,.li-tbl th.li-l{text-align:left;font-family:'Noto Sans TC',sans-serif}
+.li-scroll{max-height:380px;overflow:auto}
+.li-wrap{position:relative;height:280px}
+.li-note{font-size:11.5px;color:var(--text3);margin-top:10px;line-height:1.6}
+
 /* ─── RFP ─── */
 .summary-title{
   font-size:11px;color:var(--text3);letter-spacing:.16em;
@@ -657,6 +669,7 @@ body{
 <div class="nav">
   <button class="nav-btn active" onclick="switchTab('market',this)">📈 今日行情</button>
   <button class="nav-btn" onclick="switchTab('chart',this)">📊 趨勢圖</button>
+  <button class="nav-btn" onclick="switchTab('li',this)">🔋 碳酸鋰</button>
   <button class="nav-btn" onclick="switchTab('rfp',this)">📋 RFP 案件</button>
 </div>
 
@@ -688,6 +701,14 @@ body{
   </div>
 </div>
 
+<div class="page" id="page-li">
+  <div id="li-load" class="loading">
+    <div class="spinner"></div>
+    <div class="loading-txt">載入碳酸鋰行情中...</div>
+  </div>
+  <div id="li-body" style="display:none"></div>
+</div>
+
 <div class="page" id="page-rfp">
   <div id="rfp-load" class="loading">
     <div class="spinner"></div>
@@ -717,7 +738,7 @@ async function sb(table,params=""){
   return r.json();
 }
 
-async function init(){await Promise.all([loadMarket(),loadRFP()]);}
+async function init(){await Promise.all([loadMarket(),loadRFP(),loadLithium()]);}
 
 /* ════════════ 行情 ════════════ */
 async function loadMarket(){
@@ -1195,6 +1216,89 @@ function showTrend(type,btn){
   });
 }
 
+
+/* ════════════ 碳酸鋰 ════════════ */
+let liData=[],liChart=null,liRange=250;
+const LI_T3=99912,LI_T10=160958;
+const liFmt=v=>v==null?'—':Number(v).toLocaleString('en-US');
+async function loadLithium(){
+  try{
+    liData=await sb("lithium_daily","?select=trade_date,price_avg,price_low,price_high,change,source&order=trade_date.asc&limit=5000");
+    renderLithium();
+  }catch(e){
+    document.getElementById('li-load').innerHTML=`<div class="loading-txt">碳酸鋰資料載入失敗（${e.message}），請按右上角更新再試一次。</div>`;
+  }
+}
+function liAvg(n){const a=liData.slice(-n);return Math.round(a.reduce((s,d)=>s+d.price_avg,0)/a.length);}
+function renderLithium(){
+  if(!liData.length)return;
+  const last=liData[liData.length-1],prev=liData[liData.length-2];
+  const chg=prev?last.price_avg-prev.price_avg:0;
+  const a20=liAvg(20),a60=liAvg(60);
+  const gap=LI_T3-last.price_avg;
+  const badge=chg>0?`<span class="badge b-up">▲ ${liFmt(chg)}</span>`:chg<0?`<span class="badge b-dn">▼ ${liFmt(-chg)}</span>`:`<span class="badge b-neu">持平</span>`;
+  const srcWarn=last.source!=='SMM'?`<span class="badge b-warn">${last.source} 暫代</span>`:'';
+  const pos=v=>v>=LI_T10?'<span class="badge b-hot">高於 10% 門檻</span>':v>=LI_T3?'<span class="badge b-warn">高於 3% 門檻</span>':'<span class="badge b-dn">低於 3% 門檻</span>';
+  const months={};
+  liData.forEach(d=>{const m=d.trade_date.slice(0,7);(months[m]=months[m]||[]).push(d.price_avg);});
+  const mRows=Object.keys(months).sort().reverse().map(m=>{const a=months[m];const avg=Math.round(a.reduce((s,v)=>s+v,0)/a.length);
+    return `<tr><td>${m}</td><td>${liFmt(avg)}</td><td>${liFmt(Math.min(...a))}</td><td>${liFmt(Math.max(...a))}</td><td>${a.length}</td><td class="li-l">${pos(avg)}</td></tr>`;}).join('');
+  const rRows=liData.slice(-30).reverse().map((d,i,arr)=>{const p=liData[liData.length-2-i];const c=p?d.price_avg-p.price_avg:null;
+    const cc=c==null?'':c>0?`<span style="color:var(--up)">+${liFmt(c)}</span>`:c<0?`<span style="color:var(--dn)">${liFmt(c)}</span>`:'0';
+    const src=d.source==='SMM'?'SMM':`<span style="color:var(--warn)">${d.source}</span>`;
+    return `<tr><td>${d.trade_date}</td><td>${liFmt(d.price_avg)}</td><td>${liFmt(d.price_low)}</td><td>${liFmt(d.price_high)}</td><td>${cc}</td><td class="li-l">${src}</td></tr>`;}).join('');
+  document.getElementById('li-body').innerHTML=`
+    <div class="li-src">SMM 電池級碳酸鋰（Li2CO3≥99.5%，國產）現貨日均價，元/噸。資料自 ${liData[0].trade_date} 起共 ${liData.length} 個交易日，每個工作日 17:53 自動更新。</div>
+    <div class="kpi-grid">
+      <div class="kcard" style="--ca:var(--accent)"><div class="klabel">最新日價｜${last.trade_date}</div><div class="kval">${liFmt(last.price_avg)}</div><div class="kchg">${badge} ${srcWarn}</div></div>
+      <div class="kcard" style="--ca:var(--accent2)"><div class="klabel">近 20 日均價</div><div class="kval">${liFmt(a20)}</div><div class="ksub">約一個月</div></div>
+      <div class="kcard" style="--ca:var(--accent2)"><div class="klabel">近 60 日均價</div><div class="kval">${liFmt(a60)}</div><div class="ksub">約三個月 ${pos(a60)}</div></div>
+      <div class="kcard" style="--ca:${gap>0?'var(--dn)':'var(--warn)'}"><div class="klabel">距 3% 浮動門檻</div><div class="kval">${gap>0?liFmt(gap):'+'+liFmt(-gap)}</div><div class="ksub">${gap>0?'元，低於門檻':'元，已高於門檻'}｜門檻 ${liFmt(LI_T3)}</div></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">碳酸鋰日價與浮動門檻</div>
+      <div class="chart-tabs">
+        <button class="ctab li-r" data-r="63" onclick="liSetRange(63,this)">3 個月</button>
+        <button class="ctab li-r active" data-r="250" onclick="liSetRange(250,this)">1 年</button>
+        <button class="ctab li-r" data-r="0" onclick="liSetRange(0,this)">全部</button>
+      </div>
+      <div class="li-wrap"><canvas id="liChart"></canvas></div>
+      <div class="li-note">橘色虛線為 3% 門檻 ${liFmt(LI_T3)}、紅色虛線為 10% 門檻 ${liFmt(LI_T10)} 元/噸。空心點為 SMM 日評未取得、暫以 Mysteel 代入的日子，取得 SMM 後自動覆蓋。</div>
+    </div>
+    ${sec('limon','月均價',`<div class="li-scroll"><table class="li-tbl"><thead><tr><th>月份</th><th>月均價</th><th>最低</th><th>最高</th><th>交易日</th><th class="li-l">門檻位置</th></tr></thead><tbody>${mRows}</tbody></table></div>`)}
+    ${sec('lirec','近 30 個交易日',`<div class="li-scroll"><table class="li-tbl"><thead><tr><th>日期</th><th>均價</th><th>最低</th><th>最高</th><th>漲跌</th><th class="li-l">來源</th></tr></thead><tbody>${rRows}</tbody></table></div>`)}`;
+  document.getElementById('li-load').style.display='none';
+  document.getElementById('li-body').style.display='block';
+  if(document.getElementById('page-li').classList.contains('active'))drawLithium();
+}
+function liSetRange(n,btn){
+  liRange=n;
+  document.querySelectorAll('.li-r').forEach(b=>b.classList.toggle('active',b===btn));
+  drawLithium();
+}
+function drawLithium(){
+  const el=document.getElementById('liChart');if(!el||!liData.length)return;
+  const pts=liRange?liData.slice(-liRange):liData;
+  const labels=pts.map(d=>liRange&&liRange<=63?d.trade_date.slice(5):d.trade_date.slice(0,7));
+  const alt=pts.map(d=>d.source!=='SMM');
+  const hi=Math.max(...pts.map(d=>d.price_avg));
+  const ds=[
+    {label:'電池級碳酸鋰',data:pts.map(d=>d.price_avg),borderColor:'#4f9cf9',backgroundColor:'rgba(79,156,249,.07)',fill:true,tension:0,borderWidth:2,
+     pointRadius:pts.map((d,i)=>alt[i]?4:(i===pts.length-1?4:0)),pointBackgroundColor:pts.map((d,i)=>alt[i]?'#0c1020':'#4f9cf9'),pointBorderColor:pts.map((d,i)=>alt[i]?'#fbbf24':'#4f9cf9'),pointBorderWidth:2},
+    {label:'3% 門檻',data:pts.map(()=>LI_T3),borderColor:'#fbbf24',borderDash:[6,5],borderWidth:1.5,pointRadius:0,fill:false},
+  ];
+  if(hi>LI_T10*0.85)ds.push({label:'10% 門檻',data:pts.map(()=>LI_T10),borderColor:'#f87171',borderDash:[6,5],borderWidth:1.5,pointRadius:0,fill:false});
+  if(liChart)liChart.destroy();
+  liChart=new Chart(el,{type:'line',data:{labels,datasets:ds},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:'#7a8ba8',font:{size:12},boxWidth:10,padding:12}},
+        tooltip:{callbacks:{title:items=>{const d=pts[items[0].dataIndex];return `${d.trade_date}｜${d.source}`;},label:c=>`${c.dataset.label}：${liFmt(c.parsed.y)} 元/噸`}}},
+      scales:{
+        x:{ticks:{color:'#3a4a62',font:{size:11},maxRotation:0,autoSkip:true,maxTicksLimit:Math.max(3,Math.min(8,Math.floor(el.clientWidth/95)))},grid:{color:'rgba(255,255,255,.05)'},border:{color:'rgba(255,255,255,.07)'}},
+        y:{ticks:{color:'#3a4a62',font:{size:11},callback:v=>liFmt(v)},grid:{color:'rgba(255,255,255,.05)'},border:{color:'rgba(255,255,255,.07)'}}
+      }}});
+}
+
 /* ════════════ RFP ════════════ */
 async function loadRFP(){
   try{
@@ -1330,6 +1434,7 @@ function switchTab(tab,btn){
   document.getElementById(`page-${tab}`).classList.add('active');
   btn.classList.add('active');
   if(tab==='chart'&&trendData.length>0)setTimeout(()=>showTrend('fx'),100);
+  if(tab==='li'&&liData.length>0)setTimeout(drawLithium,100);
 }
 
 async function refreshAll(){
@@ -1339,9 +1444,11 @@ async function refreshAll(){
   document.getElementById("mkt-body").style.display="none";
   document.getElementById("rfp-load").style.display="flex";
   document.getElementById("rfp-body").style.display="none";
+  document.getElementById("li-load").style.display="flex";
+  document.getElementById("li-body").style.display="none";
   Object.values(sparkCharts).forEach(c=>c.destroy());
   Object.keys(sparkCharts).forEach(k=>delete sparkCharts[k]);
-  await Promise.all([loadMarket(),loadRFP()]);
+  await Promise.all([loadMarket(),loadRFP(),loadLithium()]);
   icon.classList.remove('spin');
 }
 
